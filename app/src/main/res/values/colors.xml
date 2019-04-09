@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="global_background">#E9ECEE</color>
+    <color name="white_background">#fafafa</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="darkBlue">#1A62A5</color>
+    <color name="deepBlue">#1D6DB7</color>
+    <color name="grayBlue">#2076C6</color>
+    <color name="grayBlues">#3285ff</color>
+    <color name="blue">#2382DB</color>
+    <color name="lightBlue">#2595DD</color>
+    <color name="skyBlue">#39B0FC</color>
+    <color name="serverBlue">#1993E0</color>
+    <color name="lightGray">#DEDEDE</color>
+    <color name="gray">#A0A0A0</color>
+    <color name="split_gray">#DFE2E4</color>
+    <color name="white">#FFFFFF</color>
+    <color name="bgblue">#1B82D2</color>
+    <color name="task_button">#6FC211</color>
+    <color name="btnRed">#E34942</color>
+    <color name="devStatusRed">#F25F27</color>
+    <color name="point1">#eaa114</color>
+    <color name="point2">#17ae17</color>
+    <color name="point3">#eb4b56</color>
+    <color name="point4">#0DACBF</color>
+    <color name="point5">#EB4B56</color>
+    <color name="normalText">#3E3A5A</color>
+    <color name="normalTexts">#3E3A5B</color>
+    <color name="deepGray">#8D8B99</color>
+    <color name="task_step_bg">#F5F8FA</color>
+    <color name="tv_tab">#A2A4A6</color>
+    <color name="series_not_end">#fffec500</color>
+    <color name="sienna">#ffa0522d</color>
+    <color name="silver">#ffc0c0c0</color>
+    <color name="skyblue">#ff87ceeb</color>
+    <color name="slateblue">#ff6a5acd</color>
+    <color name="slategray">#ff708090</color>
+    <color name="textColor">#666666</color>
+    <color name="shadow">#dfdfdf</color>
+    <color name="scale">#58000000</color>
+    <color name="leftRight">#e1dcd6</color>
+    <color name="rightRight">#f4efe9</color>
+    <color name="outsideBlue">#2690f8</color>
+    <color name="insideBlue">#58ade5</color>
+    <color name="insideCircle">#c2b9b0</color>
+    <color name="gray_bg">#edf0f2</color>
+
+
+    <color name="chart_green">#28892A</color>
+    <color name="chart_red">#FC471E</color>
+    <color name="chart_blue">#4789B9</color>
+
+
+
+    <color name="im_input_bg">#EBECEE</color>
+    <color name="im_date">#78777A</color>
+
+
+    <color name="score_low">#F45E14</color>
+    <color name="score_pass">#0AA3B1</color>
+    <color name="score_good">#13A009</color>
+
+    <color name="soe">#E8892C</color>
+    <color name="weibao">#20B6AC</color>
+    <color name="xunjian">#61AF2B</color>
+    <color name="system">#2595DD</color>
+    <color name="other">#5C7583</color>
+
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="tab_title_selected_two">#3285ff</color>
+    <color name="tab_title_normal_two">#3e3b5a</color>
+</resources>

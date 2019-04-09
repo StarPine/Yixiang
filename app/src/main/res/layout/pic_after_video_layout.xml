@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#ffffff"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <LinearLayout 
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent">
+        <TextView 
+            android:text="跟你的作品一起合影吧"
+            android:textSize="@dimen/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    
+    <ImageButton 
+        android:id="@+id/ok_img_ibtn"
+        android:src="@drawable/ok_icon"
+        android:background="@null"
+        android:padding="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

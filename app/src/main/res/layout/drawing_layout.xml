@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background" >
+
+    <RelativeLayout
+        android:id="@+id/drawing_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <RelativeLayout
+            android:id="@+id/video_img_rl"
+            android:layout_width="match_parent"
+            android:layout_height="150dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
+
+                    <ImageView
+                        android:id="@+id/video_iv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/introduction" />
+
+                    <ImageView
+                        android:id="@+id/video_play_iv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:scaleType="center"
+                        android:src="@drawable/play_icon" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/img_iv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/introduction" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            android:background="@drawable/text_bg" >
+
+                <TextView
+                    android:id="@+id/date_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="20161122"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/content" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/content_et"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:gravity="top"
+            android:layout_below="@+id/video_img_rl"
+            android:background="@drawable/text_bg"
+            android:hint="写上你的作品名称或心情吧（字数不超过20）"
+            android:maxLength="20"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/content" />
+
+        <LinearLayout
+            android:id="@+id/share_rl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_below="@+id/content_et" >
+            
+            <ImageButton
+                android:id="@+id/share_friend_ibtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="20dp"
+                android:background="@null"
+                android:scaleType="centerInside"
+                android:src="@drawable/friend_share_icon" />
+
+            <ImageButton
+                android:id="@+id/share_circle_ibtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="20dp"
+                android:background="@null"
+                android:scaleType="centerInside"
+                android:src="@drawable/circle_share_icon" />
+            
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" >
+
+            <ImageButton
+                android:id="@+id/back_ibtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv"
+                android:background="@null"
+                android:padding="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/back_icon" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/pic_show_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/pic_show_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:scaleType="fitCenter" />
+
+        <ImageButton
+            android:id="@+id/change_pic_ibtn"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:padding="10dp"
+            android:src="@drawable/home_picture_icon" />
+
+        
+    </RelativeLayout>
+
+</RelativeLayout>

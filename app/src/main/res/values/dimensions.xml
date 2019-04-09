@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="title">25dp</dimen>
+    <dimen name="top_name">35dp</dimen>
+    <dimen name="content">20dp</dimen>
+    <color name="red">#CC3346</color>
+</resources>

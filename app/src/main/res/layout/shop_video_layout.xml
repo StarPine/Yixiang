@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background" >
+    
+    <RelativeLayout 
+        android:id="@+id/top_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <ImageView 
+            android:id="@+id/merchant_image_iv"
+            android:layout_margin="10dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+        
+        <TextView 
+            android:id="@+id/merchant_name_tv"
+            android:layout_toRightOf="@+id/merchant_image_iv"
+            android:layout_centerVertical="true"
+            android:textColor="#ffffff"
+            android:textSize="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        
+        <ImageButton 
+            android:id="@+id/more"
+            android:src="@drawable/more"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        
+    </RelativeLayout>
+    
+    <RelativeLayout 
+        android:id="@+id/content_rl"
+        android:layout_below="@+id/top_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <GridView 
+            android:id="@+id/gview"
+            android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@null"
+        android:horizontalSpacing="5px"
+        android:listSelector="#00000000"
+        android:numColumns="3"
+        android:layout_margin="5dp"
+        android:layout_centerHorizontal="true"
+        android:verticalSpacing="10px" >            
+        </GridView>
+        
+        <ImageButton 
+            android:id="@+id/purchase"
+            android:src="@drawable/purchase"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        
+    </RelativeLayout>
+    
+
+</RelativeLayout>

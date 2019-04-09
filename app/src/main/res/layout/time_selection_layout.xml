@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+        
+        <ImageView 
+            android:id="@+id/time_bg_iv"
+            android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:src="@drawable/time_selection_bg"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:scaleType="fitXY"
+	        android:background="@null"/>
+        
+        <ImageButton 
+            android:id="@+id/cancel_ibtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_alignRight="@+id/time_bg_iv"
+            android:layout_margin="5dp"
+            android:src="@drawable/time_select_cancel"/>
+        
+        <LinearLayout 
+            android:layout_below="@+id/cancel_ibtn"
+            android:layout_alignBottom="@+id/time_bg_iv"
+            android:gravity="center_vertical"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+	        android:layout_height="wrap_content">
+            <ImageButton 
+                android:id="@+id/ten_s_ibtn"
+                android:layout_width="match_parent"
+	        	android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/ten_s_unselect" />
+            <ImageButton 
+                android:id="@+id/thirty_s_ibtn"
+                android:layout_width="match_parent"
+	        	android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/fifteen_s_unselect" />
+            <ImageButton 
+                android:id="@+id/sixty_s_ibtn"
+                android:layout_width="match_parent"
+	        	android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/thirty_s_unselect" />
+        </LinearLayout>
+        
+    </RelativeLayout>
+
+</RelativeLayout>

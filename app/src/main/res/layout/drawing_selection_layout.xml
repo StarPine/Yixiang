@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical" >
+
+    <GridView
+        android:id="@+id/gview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tool_rl"
+        android:background="@null"
+        android:horizontalSpacing="5px"
+        android:listSelector="#00000000"
+        android:numColumns="3"
+        android:verticalSpacing="10px" >
+    </GridView>
+
+    <RelativeLayout
+        android:id="@+id/tool_rl"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_alignParentBottom="true" >
+
+        
+
+            
+
+            <RelativeLayout
+                android:id="@+id/play_tool_rl"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+                
+                <LinearLayout 
+                android:layout_above="@+id/ok_ibtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" 
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/ten_s_ibtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:src="@drawable/ten_s_selected" />
+                    <ImageButton
+                    android:id="@+id/thirty_s_ibtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:src="@drawable/thirty_s_unselect" />
+
+                <ImageButton
+                    android:id="@+id/sixty_s_ibtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:src="@drawable/sixty_s_unselect" />
+                </LinearLayout>
+                
+               
+
+                
+
+                <ImageView
+                    android:id="@+id/bottom_bar_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/bottom_bar_bg" />
+                
+                <RelativeLayout 
+                    android:id="@+id/bottom_bar_rl"
+                    android:layout_toLeftOf="@+id/ok_ibtn"
+                    android:layout_alignTop="@+id/bottom_bar_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageButton
+                    android:id="@+id/back_ibtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@null"
+                    android:src="@drawable/back_icon" />
+                </RelativeLayout>
+
+                
+
+                <ImageButton
+                    android:id="@+id/ok_ibtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="5dp"
+                    android:background="@null"
+                    android:src="@drawable/start_icon" />
+                
+                <RelativeLayout 
+                    android:layout_toRightOf="@+id/ok_ibtn"
+                    android:layout_alignTop="@+id/bottom_bar_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageButton
+                    android:id="@+id/take_get_pic_ibtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@null"
+                    android:src="@drawable/home_picture_icon" />
+                </RelativeLayout>
+
+                
+            </RelativeLayout>
+        
+    </RelativeLayout>
+
+</RelativeLayout>
