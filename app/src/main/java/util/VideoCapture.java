@@ -143,7 +143,7 @@ public class VideoCapture {
 								testBitmap.getHeight());
 						recorder.setFormat("mp4");
 						recorder.setFrameRate(frameRate);// 录像帧率
-						
+						recorder.setVideoQuality(0);
 						recorder.start();
 						
 
