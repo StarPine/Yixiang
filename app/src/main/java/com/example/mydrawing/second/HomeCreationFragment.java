@@ -1,5 +1,7 @@
-package com.example.mydrawing;
+package com.example.mydrawing.second;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +10,9 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +20,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.mydrawing.R;
+import com.example.mydrawing.VideoActivity;
 import com.example.mydrawing2.VideoSelectionActivity2;
+import com.lidroid.xutils.ViewUtils;
+
+import util.SelectPhotoUtil;
 
 /**
  * 创作fragment
@@ -38,15 +47,36 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
     AlertDialog.Builder builder;
     AlertDialog dialog;
     String videosec = "10s";
+    Activity activity;
+    int screenWidth, screenHeight;
+    SelectPhotoUtil selectPhotoUtil;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.creation_fragment, null);
 
+        activity = getActivity();
+        ViewUtils.inject(activity);
+        //获取屏幕分辨率信息
+        DisplayMetrics dm = new DisplayMetrics();
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        display.getMetrics(dm);
+        screenWidth = dm.widthPixels; // 屏幕宽（像素，如：480px）
+        screenHeight = dm.heightPixels; // 屏幕高（像素，如：800p）
         initview(view);
-        bundle = new Bundle();
+        initData();
+
         return view;
+    }
+
+    private void initData() {
+        Log.e("Starpine", "464");
+        intent = new Intent(activity,VideoActivity.class);
+        bundle = new Bundle();
+        selectPhotoUtil = new SelectPhotoUtil(activity);
+
     }
 
     private void initview(View view) {
@@ -83,7 +113,7 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
 
             case R.id.no_ref_ibtn:
                 Toast.makeText(getContext(), "无参考", Toast.LENGTH_SHORT).show();
-                intent = new Intent(getActivity(),VideoActivity.class);
+
                 bundle = new Bundle();
                 bundle.clear();
 

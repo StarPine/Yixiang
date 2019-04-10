@@ -12,12 +12,15 @@ import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.example.mydrawing.R;
+import com.example.mydrawing.second.HomeCreationFragment;
+import com.example.mydrawing.second.HomeRecordFragment;
 
 /**
  * Created by Jerry on 2019/4/6.
@@ -66,6 +69,12 @@ public class MainActivity2 extends FragmentActivity {
     private void initFragment() {
         homeCreationFragment = new HomeCreationFragment();
         homeRecordFragment = new HomeRecordFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.putString("data","传递到的数据");
+//        homeCreationFragment.setArguments(bundle);//数据传递到fragment中
+//        homeRecordFragment.setArguments(bundle);//数据传递到fragment中
+
+
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.content,homeRecordFragment);

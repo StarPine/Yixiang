@@ -94,14 +94,13 @@ public class VideoSelectionActivity2 extends Activity{
 		super.onCreate(savedInstanceState);
 		MyApplication.getInstance().addActivity(this);
 		ViewUtils.inject(this);
-		
+		//获取屏幕分辨率信息
 		DisplayMetrics dm = new DisplayMetrics();
 		Display display = getWindowManager().getDefaultDisplay();
 		display.getMetrics(dm);
 		screenWidth = dm.widthPixels; // 屏幕宽（像素，如：480px）
 		screenHeight = dm.heightPixels; // 屏幕高（像素，如：800p）
-//		Toast.makeText(this, "w,h: "+screenWidth+" "+screenHeight, Toast.LENGTH_SHORT).show();
-		
+
 		initView();
 		
 		intent = new Intent(VideoSelectionActivity2.this,VideoActivity.class);
