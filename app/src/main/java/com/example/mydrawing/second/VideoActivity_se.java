@@ -103,10 +103,8 @@ public class VideoActivity_se extends Activity implements Callback,
 
 	static final String IMAGE_TYPE = ".jpg";
 
-	long startTime;
 	String tempFilePath,localVideoPath,localImagePath,localTakeImagePath;
 
-	double caustTime;
 
 	public String savePath;
 

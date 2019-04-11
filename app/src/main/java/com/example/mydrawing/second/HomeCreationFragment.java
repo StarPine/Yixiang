@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -20,12 +21,16 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.mydrawing.MainActivity;
 import com.example.mydrawing.R;
 import com.example.mydrawing.VideoActivity;
+import com.example.mydrawing.zxing.android.CaptureActivity;
 import com.example.mydrawing2.VideoSelectionActivity2;
 import com.lidroid.xutils.ViewUtils;
 
 import util.SelectPhotoUtil;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * 创作fragment
@@ -50,6 +55,9 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
     Activity activity;
     int screenWidth, screenHeight;
     SelectPhotoUtil selectPhotoUtil;
+    private static final String DECODED_CONTENT_KEY = "codedContent";
+    private static final String DECODED_BITMAP_KEY = "codedBitmap";
+    private static final int REQUEST_CODE_SCAN = 0x0000;
 
 
     @Override
@@ -91,10 +99,36 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // 扫描二维码/条码回传
+        if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
+            if (data != null) {
+                //返回的文本内容
+                String content = data.getStringExtra(DECODED_CONTENT_KEY);
+                //返回的BitMap图像
+                Bitmap bitmap = data.getParcelableExtra(DECODED_BITMAP_KEY);
+
+                Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    }
+
+    /**
+     * 跳转到扫码界面扫码
+     */
+    private void goScan() {
+        Intent intent = new Intent(activity, CaptureActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SCAN);
+    }
+
+    @Override
     public void onClick(View view) {
 //        if (isNetworkAvailable(getContext())) {
 //            return;
 //        }
+        goScan();
         switch (view.getId()) {
 
             case R.id.buttons_rl:
@@ -114,10 +148,10 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
             case R.id.no_ref_ibtn:
                 Toast.makeText(getContext(), "无参考", Toast.LENGTH_SHORT).show();
 
-                bundle = new Bundle();
-                bundle.clear();
-
-                showTimeSelection();
+//                bundle = new Bundle();
+//                bundle.clear();
+//
+//                showTimeSelection();
                 break;
         }
 
