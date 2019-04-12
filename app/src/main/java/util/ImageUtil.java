@@ -23,19 +23,19 @@ import android.provider.MediaStore.Images.ImageColumns;
 
 public class ImageUtil {
 
-	/** 
-	08.     * 旋转Bitmap 
-	09.     * @param b 
-	10.     * @param rotateDegree 
-	11.     * @return 
-	12.     */  
-	public static Bitmap getRotateBitmap(Bitmap b, float rotateDegree){  
-	    Matrix matrix = new Matrix();  
-	    matrix.postRotate((float)rotateDegree);  
-	    Bitmap rotaBitmap = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), matrix, false);  
-	    return rotaBitmap;  
-	}  
-	
+	/**
+	08.     * 旋转Bitmap
+	09.     * @param b
+	10.     * @param rotateDegree
+	11.     * @return
+	12.     */
+	public static Bitmap getRotateBitmap(Bitmap b, float rotateDegree){
+	    Matrix matrix = new Matrix();
+	    matrix.postRotate((float)rotateDegree);
+	    Bitmap rotaBitmap = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), matrix, false);
+	    return rotaBitmap;
+	}
+
 	public static byte[] rotateYUV420Degree90(byte[] data, int imageWidth, int imageHeight)
 	{
 		byte [] yuv = new byte[imageWidth*imageHeight*3/2];
@@ -63,34 +63,34 @@ public class ImageUtil {
 		}
 		return yuv;
 	}
-	
+
 
 	public static void rotateYUV240SP(byte[] src,byte[] des,int width,int height)
 	{
-	   
+
 		int wh = width * height;
 		//旋转Y
 		int k = 0;
 		for(int i=0;i<width;i++) {
-			for(int j=0;j<height;j++) 
+			for(int j=0;j<height;j++)
 			{
-	              des[k] = src[width*j + i];			
+	              des[k] = src[width*j + i];
 			      k++;
 			}
 		}
-		
+
 		for(int i=0;i<width;i+=2) {
-			for(int j=0;j<height/2;j++) 
-			{	
-	              des[k] = src[wh+ width*j + i];	
+			for(int j=0;j<height/2;j++)
+			{
+	              des[k] = src[wh+ width*j + i];
 	              des[k+1]=src[wh + width*j + i+1];
 			      k+=2;
 			}
 		}
-		
-		
+
+
 	}
-	
+
 	/**
 
 	 * 读取图片的旋转的角度
@@ -152,7 +152,7 @@ public class ImageUtil {
 	    return degree;
 
 	}
-	
+
 	public static Bitmap adjustPhotoRotation(Bitmap bm, final int orientationDegree)
 	{
 
@@ -200,7 +200,7 @@ public class ImageUtil {
 
 	    return bm1;
 	  }
-	
+
 	/**
 	 * Try to return the absolute file path from the given Uri
 	 *
@@ -230,7 +230,7 @@ public class ImageUtil {
 	    }
 	    return data;
 	}
-	
+
 	/*
 	ѹ��ͼƬ������ĳЩ�ֻ����սǶ���ת������
 	*/
@@ -257,11 +257,11 @@ public class ImageUtil {
 	        new FileUtils().creatSDDir("MyDrawings");
 	        new FileUtils().creatSDDir(SystemValue.localImagePath);
 	        File imageDir = new File(path);
-	        
+
 	        File outputFile=new File(imageDir,fileName);
-	        
+
 	        FileOutputStream out = new FileOutputStream(outputFile);
-	      //��bitmap���������У�����bitmap�Ĵ�С����ʵ�ʶ�ȡ��ԭ�ļ�Ҫ��  
+	      //��bitmap���������У�����bitmap�Ĵ�С����ʵ�ʶ�ȡ��ԭ�ļ�Ҫ��
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	        do{
 	        	baos.reset();
@@ -269,7 +269,7 @@ public class ImageUtil {
 	        	q -= 10;
 	        }while (baos.toByteArray().length > 100 * 1024);
 
-	       
+
 				baos.writeTo(out);
 				return outputFile.getPath();
 			} catch (Exception e) {
@@ -318,7 +318,7 @@ public class ImageUtil {
 	public static Bitmap rotateBitmap(Bitmap bitmap,int degress) {
         if (bitmap != null) {
             Matrix m = new Matrix();
-            m.postRotate(degress); 
+            m.postRotate(degress);
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
                     bitmap.getHeight(), m, true);
             return bitmap;
@@ -333,10 +333,10 @@ public class ImageUtil {
 			matrix.setValues(matrixValues);
 			//����matrix.postTranslate(0, height);//��ʾ��ͼƬ���µ���
 			matrix.postTranslate(0, height*2);
-			Bitmap rotaBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);  
-		    return rotaBitmap;  
+			Bitmap rotaBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
+		    return rotaBitmap;
 		}
-		
+
 		// ��ֱ�Գ�--ͼƬ����Y���
 		public static Bitmap testSymmetryY(Bitmap bitmap) {
 			Matrix matrix = new Matrix();
@@ -345,10 +345,10 @@ public class ImageUtil {
 			matrix.setValues(matrixValues);
 			//����matrix.postTranslate(width,0);//��ʾ��ͼƬ���ҵ���
 			matrix.postTranslate(width*2, 0);
-			Bitmap rotaBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);  
-		    return rotaBitmap; 
+			Bitmap rotaBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
+		    return rotaBitmap;
 		}
-		
+
 		public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			bmp.compress(CompressFormat.PNG, 100, output);
@@ -360,14 +360,14 @@ public class ImageUtil {
 //			if (needRecycle) {
 //				bmp.recycle();
 //			}
-			
+
 			byte[] result = output.toByteArray();
 			try {
 				output.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 			return result;
 		}
 }

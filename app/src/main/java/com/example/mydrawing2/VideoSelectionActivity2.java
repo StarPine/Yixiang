@@ -1,19 +1,5 @@
 package com.example.mydrawing2;
 
-import java.io.File;
-import util.ImageUtil;
-import util.SelectPhotoUtil;
-import util.SystemValue;
-
-import com.example.mydrawing.R;
-import com.example.mydrawing.VideoActivity;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.view.annotation.ContentView;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
-
-import entity.MyApplication;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -41,7 +27,20 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+
+import com.example.mydrawing.R;
+import com.example.mydrawing.second.VideoActivity_se;
+import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.view.annotation.ContentView;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
+
+import java.io.File;
+
+import entity.MyApplication;
+import util.ImageUtil;
+import util.SelectPhotoUtil;
+import util.SystemValue;
 
 @ContentView(R.layout.drawing_selection_layout2)
 public class VideoSelectionActivity2 extends Activity{
@@ -103,7 +102,7 @@ public class VideoSelectionActivity2 extends Activity{
 
 		initView();
 		
-		intent = new Intent(VideoSelectionActivity2.this,VideoActivity.class);
+		intent = new Intent(VideoSelectionActivity2.this,VideoActivity_se.class);
 		bundle = new Bundle();
 		
 		selectPhotoUtil = new SelectPhotoUtil(this);

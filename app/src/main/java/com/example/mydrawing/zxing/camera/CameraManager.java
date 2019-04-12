@@ -32,7 +32,7 @@ import java.io.IOException;
  * This object wraps the Camera service object and expects to be the only one
  * talking to it. The implementation encapsulates the steps needed to take
  * preview-sized images, which are used for both preview and decoding.
- * 
+ *
  * @author dswitkin@google.com (Daniel Switkin)
  */
 public final class CameraManager {
@@ -70,7 +70,7 @@ public final class CameraManager {
 
 	/**
 	 * Opens the camera driver and initializes the hardware parameters.
-	 * 
+	 *
 	 * @param holder
 	 *            The surface object which the camera will draw preview frames
 	 *            into.
@@ -184,7 +184,7 @@ public final class CameraManager {
 	 * A single preview frame will be returned to the handler supplied. The data
 	 * will arrive as byte[] in the message.obj field, with width and height
 	 * encoded as message.arg1 and message.arg2, respectively.
-	 * 
+	 *
 	 * @param handler
 	 *            The handler to send the message to.
 	 * @param message
@@ -203,7 +203,7 @@ public final class CameraManager {
 	 * where to place the barcode. This target helps with alignment as well as
 	 * forces the user to hold the device far enough away to ensure the image
 	 * will be in focus. 计算这个条形码的扫描框；便于声明的同时，也强制用户通过改变距离来扫描到整个条形码
-	 * 
+	 *
 	 * @return The rectangle to draw on screen in window coordinates.
 	 */
 	public synchronized Rect getFramingRect() {
@@ -221,7 +221,7 @@ public final class CameraManager {
 //					MIN_FRAME_WIDTH, MAX_FRAME_WIDTH);
 //			int height = findDesiredDimensionInRange(screenResolution.y,
 //					MIN_FRAME_HEIGHT, MAX_FRAME_HEIGHT);
-			
+
 			int width = findDesiredDimensionInRange(screenResolution.x,
 					MIN_FRAME_WIDTH, MAX_FRAME_WIDTH)*4/5;
 			int height = findDesiredDimensionInRange(screenResolution.y,
@@ -231,8 +231,8 @@ public final class CameraManager {
 			int topOffset = (screenResolution.y - height) / 2;
 //			framingRect = new Rect(leftOffset, topOffset, leftOffset + width,
 //					topOffset + height);
-			framingRect = new Rect(leftOffset-100, topOffset-50, leftOffset + width+100,
-					topOffset + width+100+50);
+			framingRect = new Rect(leftOffset, topOffset-200, leftOffset + width,
+					topOffset + width-200);
 
 			Log.d(TAG, "Calculated framing rect: " + framingRect);
 		}
@@ -254,7 +254,7 @@ public final class CameraManager {
 	/**
 	 * Like {@link #getFramingRect} but coordinates are in terms of the preview
 	 * frame, not UI / screen.
-	 * 
+	 *
 	 * @return {@link Rect} expressing barcode scan area in terms of the preview
 	 *         size
 	 */
@@ -285,7 +285,7 @@ public final class CameraManager {
 	/**
 	 * Allows third party apps to specify the camera ID, rather than determine
 	 * it automatically based on available cameras and their orientation.
-	 * 
+	 *
 	 * @param cameraId
 	 *            camera ID of the camera to use. A negative value means
 	 *            "no preference".
@@ -297,7 +297,7 @@ public final class CameraManager {
 	/**
 	 * Allows third party apps to specify the scanning rectangle dimensions,
 	 * rather than determine them automatically based on screen resolution.
-	 * 
+	 *
 	 * @param width
 	 *            The width in pixels to scan.
 	 * @param height
@@ -327,7 +327,7 @@ public final class CameraManager {
 	/**
 	 * A factory method to build the appropriate LuminanceSource object based on
 	 * the format of the preview buffers, as described by Camera.Parameters.
-	 * 
+	 *
 	 * @param data
 	 *            A preview frame.
 	 * @param width

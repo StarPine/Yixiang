@@ -1,22 +1,21 @@
 package util;
 
-import static com.googlecode.javacv.cpp.opencv_highgui.cvLoadImage;
-
-import java.io.File;
-import java.util.List;
-
-import util.FileUtils.NoSdcardException;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.mydrawing.VideoActivity;
 import com.googlecode.javacv.FFmpegFrameRecorder;
 import com.googlecode.javacv.FrameRecorder.Exception;
 import com.googlecode.javacv.cpp.opencv_core;
+
+import java.io.File;
+import java.util.List;
+
+import util.FileUtils.NoSdcardException;
+
+import static com.googlecode.javacv.cpp.opencv_highgui.cvLoadImage;
 
 public class VideoCapture {
 	private static int switcher = 0;// 录像键

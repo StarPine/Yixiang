@@ -1,6 +1,6 @@
 package com.example.mydrawing.second;
 
-import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -21,11 +21,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.mydrawing.MainActivity;
 import com.example.mydrawing.R;
-import com.example.mydrawing.VideoActivity;
 import com.example.mydrawing.zxing.android.CaptureActivity;
-import com.example.mydrawing2.VideoSelectionActivity2;
 import com.lidroid.xutils.ViewUtils;
 
 import util.SelectPhotoUtil;
@@ -81,7 +78,7 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
 
     private void initData() {
         Log.e("Starpine", "464");
-        intent = new Intent(activity,VideoActivity.class);
+        intent = new Intent(activity,VideoActivity_se.class);
         bundle = new Bundle();
         selectPhotoUtil = new SelectPhotoUtil(activity);
 
