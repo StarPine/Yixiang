@@ -16,6 +16,7 @@ import entity.UserInfo;
 public class SystemValue {
 	
 	public static String basic_url = "http://10.249.55.58:8080/MyDrawingServer/";
+	public static String barcode_url = "http://www.cool-la-share.cn:8088/API/activeDeviceByQrCode/serialNumber/";
 //	public static String basic_url = "http://www.cool-la-share.cn:80/MyDrawingServer/";
 //	public static String basic_url = "http://123.207.29.211:8080/MyDrawingServer/";
 	public static String VIDEO_SIGN = null;

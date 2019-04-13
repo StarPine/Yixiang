@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -25,7 +26,15 @@ import com.example.mydrawing.R;
 import com.example.mydrawing.zxing.android.CaptureActivity;
 import com.lidroid.xutils.ViewUtils;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import util.MacAddressUtil;
 import util.SelectPhotoUtil;
+import util.SystemValue;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -42,7 +51,7 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
     private ImageButton no_ref_ibtn;
     private ImageButton ten_s_ibtn;
     private ImageButton thirty_s_ibtn;
-    private ImageButton sixty_s_ibtn,time_select_cancel;
+    private ImageButton sixty_s_ibtn, time_select_cancel;
     Intent intent;
     Bundle bundle;
     View timeSelectView;
@@ -77,8 +86,7 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
     }
 
     private void initData() {
-        Log.e("Starpine", "464");
-        intent = new Intent(activity,VideoActivity_se.class);
+        intent = new Intent(activity, VideoActivity_se.class);
         bundle = new Bundle();
         selectPhotoUtil = new SelectPhotoUtil(activity);
 
@@ -117,15 +125,16 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
      */
     private void goScan() {
         Intent intent = new Intent(activity, CaptureActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_SCAN);
+//        startActivityForResult(intent, REQUEST_CODE_SCAN);
+        startActivity(intent);
     }
 
     @Override
     public void onClick(View view) {
-//        if (isNetworkAvailable(getContext())) {
-//            return;
-//        }
-        goScan();
+        if(!initActivation()){
+            return;
+        }
+
         switch (view.getId()) {
 
             case R.id.buttons_rl:
@@ -154,12 +163,29 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
 
     }
 
-    void showTimeSelection(){
-        if(builder==null){
+    //进行激活
+    private boolean initActivation() {
+
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("activation", Context.MODE_PRIVATE);
+        boolean isActivation = sharedPreferences.getBoolean("isActivation", false);
+        if (!isActivation) {//没有激活
+            if (!isNetworkAvailable(getContext())) {//没有联网
+                Toast.makeText(getContext(), "请联网进行激活", Toast.LENGTH_SHORT).show();
+            }else {//联网
+                goScan();//进行扫描激活
+
+
+            }
+        }
+        return isActivation;
+    }
+
+    void showTimeSelection() {
+        if (builder == null) {
             builder = new AlertDialog.Builder(getActivity());
 
         }
-        if(timeSelectView==null){
+        if (timeSelectView == null) {
             timeSelectView = LayoutInflater.from(getActivity()).inflate(R.layout.time_selection_layout, null);
             ten_s_ibtn = (ImageButton) timeSelectView.findViewById(R.id.ten_s_ibtn);
             thirty_s_ibtn = (ImageButton) timeSelectView.findViewById(R.id.thirty_s_ibtn);
@@ -171,7 +197,6 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
 
                 @Override
                 public void onClick(View v) {
-                    // TODO Auto-generated method stub
                     videosec = "10s";
                     ten_s_ibtn.setImageResource(R.drawable.ten_s_selected);
                     thirty_s_ibtn.setImageResource(R.drawable.fifteen_s_unselect);
@@ -186,7 +211,6 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
 
                 @Override
                 public void onClick(View v) {
-                    // TODO Auto-generated method stub
                     videosec = "15s";
                     ten_s_ibtn.setImageResource(R.drawable.ten_s_unselect);
                     thirty_s_ibtn.setImageResource(R.drawable.fifteen_s_select);
@@ -201,7 +225,6 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
 
                 @Override
                 public void onClick(View v) {
-                    // TODO Auto-generated method stub
                     videosec = "30s";
                     ten_s_ibtn.setImageResource(R.drawable.ten_s_unselect);
                     thirty_s_ibtn.setImageResource(R.drawable.fifteen_s_unselect);
@@ -216,7 +239,6 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
 
                 @Override
                 public void onClick(View v) {
-                    // TODO Auto-generated method stub
                     dialog.dismiss();
                 }
             });
@@ -246,4 +268,6 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
         }
         return false;
     }
+
+
 }
