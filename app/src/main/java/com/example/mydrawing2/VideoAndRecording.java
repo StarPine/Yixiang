@@ -181,7 +181,7 @@ public class VideoAndRecording extends Activity implements Callback,
 									@Override
 									public void onClick(DialogInterface arg0,
 											int arg1) {
-										// TODO Auto-generated method stub
+
 										editor.putString("state", "finished");
 										editor.apply();
 										finish();
@@ -438,7 +438,7 @@ public class VideoAndRecording extends Activity implements Callback,
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+
 				mHandler.sendEmptyMessage(RECORD_TIME);
 			}
 		};
@@ -546,7 +546,7 @@ public class VideoAndRecording extends Activity implements Callback,
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+
 				if(!isLoadingCompletion){
 					progressDialog.dismiss();
 					new AlertDialog.Builder(VideoAndRecording.this,
@@ -562,7 +562,7 @@ public class VideoAndRecording extends Activity implements Callback,
 			
 			@Override
 			public boolean onError(MediaPlayer mp, int what, int extra) {
-				// TODO Auto-generated method stub
+
 				progressDialog.dismiss();
 				new AlertDialog.Builder(VideoAndRecording.this,
 						AlertDialog.THEME_HOLO_DARK).setTitle("信息")
@@ -576,7 +576,7 @@ public class VideoAndRecording extends Activity implements Callback,
 
 			@Override
 			public void onPrepared(MediaPlayer mp) {
-				// TODO Auto-generated method stub
+
 				progressDialog.dismiss();
 				isLoadingCompletion = true;
 			}
@@ -585,7 +585,7 @@ public class VideoAndRecording extends Activity implements Callback,
 			
 			@Override
 			public void onCompletion(MediaPlayer mp) {
-				// TODO Auto-generated method stub
+
 				
 				maxPosition = videoView.getCurrentPosition();
 			}
@@ -694,7 +694,7 @@ public class VideoAndRecording extends Activity implements Callback,
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				isRunning = true;
 				isPause = false;
 				isReciprocal = false;
@@ -712,7 +712,7 @@ public class VideoAndRecording extends Activity implements Callback,
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				finishVideo();
 			}
 		});
@@ -722,7 +722,7 @@ public class VideoAndRecording extends Activity implements Callback,
 			@SuppressLint("NewApi")
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				if (isRecording) {
 					new AlertDialog.Builder(VideoAndRecording.this,
 							AlertDialog.THEME_HOLO_DARK)
@@ -734,7 +734,7 @@ public class VideoAndRecording extends Activity implements Callback,
 										@Override
 										public void onClick(
 												DialogInterface arg0, int arg1) {
-											// TODO Auto-generated method stub
+
 											editor.putString("state",
 													"finished");
 											editor.apply();
@@ -768,7 +768,7 @@ public class VideoAndRecording extends Activity implements Callback,
 		pause.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+
 				isPause = true;
 				pause.setVisibility(View.GONE);
 				pause_rl.setVisibility(View.VISIBLE);
@@ -781,7 +781,7 @@ public class VideoAndRecording extends Activity implements Callback,
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+
 
 				showTimeSelection();
 			}
@@ -791,7 +791,7 @@ public class VideoAndRecording extends Activity implements Callback,
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				isPause = false;
 				pause.setVisibility(View.VISIBLE);
 				pause_rl.setVisibility(View.GONE);
@@ -804,7 +804,7 @@ public class VideoAndRecording extends Activity implements Callback,
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				// ContentValues values = new ContentValues();
 				// photoUri = VideoActivity.this.getContentResolver().insert(
 				// MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
@@ -855,7 +855,7 @@ public class VideoAndRecording extends Activity implements Callback,
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
+
 					max_frame_num = 200;
 
 					ten_s_ibtn.setImageResource(R.drawable.ten_s_selected);
@@ -873,7 +873,7 @@ public class VideoAndRecording extends Activity implements Callback,
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
+
 					max_frame_num = 600;
 					ten_s_ibtn.setImageResource(R.drawable.ten_s_unselect);
 					thirty_s_ibtn
@@ -891,7 +891,7 @@ public class VideoAndRecording extends Activity implements Callback,
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
+
 					max_frame_num = 1200;
 					ten_s_ibtn.setImageResource(R.drawable.ten_s_unselect);
 					thirty_s_ibtn
@@ -909,7 +909,7 @@ public class VideoAndRecording extends Activity implements Callback,
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
+
 					dialog.dismiss();
 					closeView();
 				}
@@ -922,7 +922,7 @@ public class VideoAndRecording extends Activity implements Callback,
 				
 				@Override
 				public void onDismiss(DialogInterface dialog) {
-					// TODO Auto-generated method stub
+
 					closeView();
 				}
 			});
@@ -1033,13 +1033,13 @@ public class VideoAndRecording extends Activity implements Callback,
 
 	@Override
 	public void onPictureTaken(byte[] arg0, Camera arg1) {
-		// TODO Auto-generated method stub
+
 
 	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-		// TODO Auto-generated method stub
+
 		// if (isRunning) {
 		final Camera.Parameters p = camera.getParameters();
 		p.setPreviewSize(previewSizeWidth, previewSizeHeight);
@@ -1056,7 +1056,7 @@ public class VideoAndRecording extends Activity implements Callback,
 
 			@Override
 			public void onPreviewFrame(byte[] arg0, Camera arg1) {
-				// TODO Auto-generated method stub
+
 				frameData = arg0;
 				// myHandler.post(DoImageProcessing);
 				if(isView){
@@ -1099,7 +1099,7 @@ public class VideoAndRecording extends Activity implements Callback,
 
 		@Override
 		public void onAutoFocus(boolean arg0, Camera arg1) {
-			// TODO Auto-generated method stub
+
 
 		}
 	};
@@ -1107,7 +1107,7 @@ public class VideoAndRecording extends Activity implements Callback,
 	@SuppressLint("NewApi")
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
-		// TODO Auto-generated method stub
+
 		int cameraCount = Camera.getNumberOfCameras();
 
 		for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
@@ -1127,7 +1127,7 @@ public class VideoAndRecording extends Activity implements Callback,
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
-		// TODO Auto-generated method stub
+
 		if (camera != null) {
 			camera.setPreviewCallback(null);
 			camera.stopPreview();
@@ -1292,7 +1292,7 @@ public class VideoAndRecording extends Activity implements Callback,
 								@Override
 								public void onClick(
 										DialogInterface arg0, int arg1) {
-									// TODO Auto-generated method stub
+
 									editor.putString("state",
 											"finished");
 									editor.apply();

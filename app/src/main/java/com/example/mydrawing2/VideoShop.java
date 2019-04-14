@@ -176,7 +176,7 @@ public class VideoShop extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
+
 				cur_position = position;
 				MerchantInfo merchantInfo = merchantInfos.get(position);
 				getVideos(merchantInfo.getMerchantId());
@@ -196,7 +196,7 @@ public class VideoShop extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+
 				boolean isShowing = popupWindow.isShowing();
 				if (isShowing) {
 					popupWindow.dismiss();
@@ -214,7 +214,7 @@ public class VideoShop extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
+
 				MerchantVideo merchantVideo = curMerchantVideos.get(position);
 				Intent intent = new Intent(VideoShop.this,
 						VideoAndRecording.class);
@@ -236,7 +236,7 @@ public class VideoShop extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+
 				if (link != null && !link.equals("")) {
 					Intent intent = new Intent();
 					intent.setAction("android.intent.action.VIEW");					
@@ -258,7 +258,7 @@ public class VideoShop extends Activity {
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+
 				progressDialog = ProgressDialog.show(VideoShop.this, "", "");
 
 				String url = SystemValue.basic_url
@@ -269,7 +269,7 @@ public class VideoShop extends Activity {
 
 							@Override
 							public void onResponse(String response) {
-								// TODO Auto-generated method stub
+
 								Log.d("getAlls", "ActivatedMerchant"+response);
 
 								try {
@@ -309,7 +309,7 @@ public class VideoShop extends Activity {
 
 							@Override
 							public void onErrorResponse(VolleyError error) {
-								// TODO Auto-generated method stub
+
 								mHandler.sendEmptyMessage(get_merchantinfo_failed);
 								Toast.makeText(
 										VideoShop.this,
@@ -333,7 +333,7 @@ public class VideoShop extends Activity {
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+
 				progressDialog = ProgressDialog.show(VideoShop.this, "", "");
 				String url = SystemValue.basic_url
 						+ "drawing.do?action=getAllMerchantVideosByMerchantID&merchantid="
@@ -344,7 +344,7 @@ public class VideoShop extends Activity {
 
 							@Override
 							public void onResponse(String response) {
-								// TODO Auto-generated method stub
+
 								Log.d("getAllMerchant",
 										"VideosByMerchantID"+response);
 
@@ -392,7 +392,7 @@ public class VideoShop extends Activity {
 
 							@Override
 							public void onErrorResponse(VolleyError error) {
-								// TODO Auto-generated method stub
+
 								mHandler.sendEmptyMessage(get_video_failed);
 								Toast.makeText(
 										VideoShop.this,
@@ -414,7 +414,7 @@ public class VideoShop extends Activity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
+
 
 			MerchantViewHolder mHolder;
 			if (convertView == null) {
@@ -441,19 +441,19 @@ public class VideoShop extends Activity {
 
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
+
 			return 0;
 		}
 
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
+
 			return null;
 		}
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
+
 			if (merchantInfos == null) {
 				return 0;
 			}
@@ -465,7 +465,7 @@ public class VideoShop extends Activity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
+
 			MerchantViewHolder mHolder;
 			if (convertView == null) {
 				convertView = new ImageView(VideoShop.this);
@@ -489,19 +489,19 @@ public class VideoShop extends Activity {
 
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
+
 			return 0;
 		}
 
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
+
 			return null;
 		}
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
+
 			if (curMerchantVideos == null) {
 				return 0;
 			}

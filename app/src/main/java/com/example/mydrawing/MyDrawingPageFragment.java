@@ -77,7 +77,7 @@ public class MyDrawingPageFragment extends Fragment{
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+
 				fPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), pagerFargmentList);
 				local_cloud_vp.setAdapter(fPagerAdapter);
 				setTab(LOCAL_TAB);
@@ -90,7 +90,7 @@ public class MyDrawingPageFragment extends Fragment{
 			
 			@Override
 			public void onPageSelected(final int index) {
-				// TODO Auto-generated method stub
+
 //				clearTab();
 //				if(index==LOCAL_TAB){
 //					local_tab_iv.setImageResource(R.drawable.local_tab_icon_s);
@@ -102,7 +102,7 @@ public class MyDrawingPageFragment extends Fragment{
 					
 					@Override
 					public void run() {
-						// TODO Auto-generated method stub
+
 						setTab(index);
 					}
 				});
@@ -111,13 +111,13 @@ public class MyDrawingPageFragment extends Fragment{
 			
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
+
 				
 			}
 			
 			@Override
 			public void onPageScrollStateChanged(int index) {
-				// TODO Auto-generated method stub
+
 //				
 			}
 		});
@@ -215,7 +215,7 @@ public class MyDrawingPageFragment extends Fragment{
 				
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
+
 					homeLocalFragment.getAction();
 					homeMeFragment.getAction(1, homeMeFragment.PAGE_SIZE, homeMeFragment.HEAD);
 					
@@ -250,13 +250,13 @@ public class MyDrawingPageFragment extends Fragment{
 
 		@Override
 		public Fragment getItem(int arg0) {
-			// TODO Auto-generated method stub
+
 			return list.get(arg0);
 		}
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
+
 			return list.size();
 		}
 		@Override  

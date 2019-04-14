@@ -123,7 +123,7 @@ public class ForgetPwd extends Activity{
 			
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				// TODO Auto-generated method stub
+
 				phone = phone_et.getText().toString().trim();
 				pwd = pwd_et.getText().toString().trim();
 				if(!phone.equals("")
@@ -141,13 +141,13 @@ public class ForgetPwd extends Activity{
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
-				// TODO Auto-generated method stub
+
 				
 			}
 			
 			@Override
 			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
+
 				
 			}
 		});
@@ -156,7 +156,7 @@ public class ForgetPwd extends Activity{
 			
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				// TODO Auto-generated method stub
+
 				phone = phone_et.getText().toString().trim();
 				pwd = pwd_et.getText().toString().trim();
 				if(!phone.equals("")
@@ -174,13 +174,13 @@ public class ForgetPwd extends Activity{
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
-				// TODO Auto-generated method stub
+
 				
 			}
 			
 			@Override
 			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
+
 				
 			}
 		});
@@ -189,7 +189,7 @@ public class ForgetPwd extends Activity{
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				if(isNext1){
 					phone = phone_et.getText().toString().trim();
 					pwd = pwd_et.getText().toString().trim();
@@ -222,7 +222,7 @@ public class ForgetPwd extends Activity{
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				if(!isWaited){
 					sendValidateCode();
 				}
@@ -233,7 +233,7 @@ public class ForgetPwd extends Activity{
 			
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				// TODO Auto-generated method stub
+
 				if(validate_code!=null&&
 						!validate_code.equals("")&&
 						validate_et.getText().toString().trim().equals(validate_code)){
@@ -249,13 +249,13 @@ public class ForgetPwd extends Activity{
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
-				// TODO Auto-generated method stub
+
 				
 			}
 			
 			@Override
 			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
+
 				
 			}
 		});
@@ -264,7 +264,7 @@ public class ForgetPwd extends Activity{
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				if(isNext2){
 					forgetPwd();
 				}
@@ -275,7 +275,7 @@ public class ForgetPwd extends Activity{
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				finish();
 			}
 		});
@@ -283,7 +283,7 @@ public class ForgetPwd extends Activity{
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				isPage2 = false;
 				register_ll2.setVisibility(View.GONE);
 				register_ll1.setVisibility(View.VISIBLE);
@@ -336,7 +336,7 @@ public class ForgetPwd extends Activity{
 
 					@Override
 					public void onResponse(String response) {
-						// TODO Auto-generated method stub
+
 						Log.d("sendValidtaeCode", "ToServer_response"+response);
 
 						
@@ -346,7 +346,7 @@ public class ForgetPwd extends Activity{
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						// TODO Auto-generated method stub
+
 						
 						
 					}
@@ -365,7 +365,7 @@ public class ForgetPwd extends Activity{
 
 					@Override
 					public void onResponse(String response) {
-						// TODO Auto-generated method stub
+
 						Log.d("changeContent_response", response);
 
 						try {
@@ -408,7 +408,7 @@ public class ForgetPwd extends Activity{
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						// TODO Auto-generated method stub
+
 						Toast.makeText(
 								ForgetPwd.this,
 								"注册失败，请稍后重试！",
@@ -430,7 +430,7 @@ public class ForgetPwd extends Activity{
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+
 				mHandler.post(count_timeRunnable);
 			}
 		};
@@ -442,7 +442,7 @@ public class ForgetPwd extends Activity{
 		
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
+
 			if(wait_sec>0){
 				isWaited = true;
 				wait_sec--;

@@ -1,6 +1,6 @@
 package com.example.mydrawing.second;
 
-public class YXbbean {
+public class YXBean {
     private String result;
     private String message;
     private int code;

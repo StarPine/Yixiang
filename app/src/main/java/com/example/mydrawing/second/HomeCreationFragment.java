@@ -3,15 +3,23 @@ package com.example.mydrawing.second;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -20,18 +28,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.mydrawing.R;
 import com.example.mydrawing.zxing.android.CaptureActivity;
+import com.example.mydrawing2.VideoAndRecording;
+import com.example.mydrawing2.VideoSelectionActivity2;
 import com.lidroid.xutils.ViewUtils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import util.ImageUtil;
 import util.MacAddressUtil;
 import util.SelectPhotoUtil;
 import util.SystemValue;
@@ -59,8 +72,11 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
     AlertDialog dialog;
     String videosec = "10s";
     Activity activity;
+    Uri photoUri;
     int screenWidth, screenHeight;
     SelectPhotoUtil selectPhotoUtil;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
     private static final String DECODED_CONTENT_KEY = "codedContent";
     private static final String DECODED_BITMAP_KEY = "codedBitmap";
     private static final int REQUEST_CODE_SCAN = 0x0000;
@@ -80,6 +96,7 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
         screenWidth = dm.widthPixels; // 屏幕宽（像素，如：480px）
         screenHeight = dm.heightPixels; // 屏幕高（像素，如：800p）
         initview(view);
+        preVideoDeal();
         initData();
 
         return view;
@@ -101,11 +118,58 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
         album_ref_ibtn.setOnClickListener(this);
         photograph_ref_ibtn.setOnClickListener(this);
         no_ref_ibtn.setOnClickListener(this);
+
+        int w = (int) ((screenWidth*0.95)/3);
+        int h = w * 239 / 174;
+        LinearLayout.LayoutParams llParams = new LinearLayout.LayoutParams(w, h);
+        llParams.weight = 1;
+        album_ref_ibtn.setLayoutParams(llParams);
+        photograph_ref_ibtn.setLayoutParams(llParams);
+        no_ref_ibtn.setLayoutParams(llParams);
+    }
+
+    /**
+     * 跳转到扫码界面扫码
+     */
+    private void goScan() {
+        Intent intent = new Intent(activity, CaptureActivity.class);
+//        startActivityForResult(intent, REQUEST_CODE_SCAN);
+        startActivity(intent);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        String picPath = null;
+
+        if (requestCode == SystemValue.GET_PICTURE) {
+            if(data!=null){
+                Uri uri = data.getData();
+                picPath = ImageUtil.getRealFilePath(activity, uri);
+            }
+        } else if (requestCode == SystemValue.TAKE_PICTURE) {
+
+            String[] pojo = { MediaStore.Images.Media.DATA };
+            Cursor cursor = activity.managedQuery(photoUri, pojo, null,
+                    null, null);
+            if (cursor != null) {
+                int columnIndex = cursor.getColumnIndexOrThrow(pojo[0]);
+                cursor.moveToFirst();
+                picPath = cursor.getString(columnIndex);
+            }
+        }
+
+        if (picPath != null) {
+            final File file = new File(picPath);
+            if (file.exists()) {
+                bundle.clear();
+                bundle.putString("record_sec", videosec);
+                bundle.putString("ref_state", "new_ref");
+                bundle.putString("ref_path", picPath);
+                bundle.putString("preVideo", "finished");
+                showTimeSelection();
+            }
+        }
         // 扫描二维码/条码回传
         if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
             if (data != null) {
@@ -120,13 +184,126 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    /**
-     * 跳转到扫码界面扫码
-     */
-    private void goScan() {
-        Intent intent = new Intent(activity, CaptureActivity.class);
-//        startActivityForResult(intent, REQUEST_CODE_SCAN);
-        startActivity(intent);
+    void preVideoDeal(){
+        sharedPreferences= activity.getSharedPreferences("preVideo",
+                Activity.MODE_PRIVATE);
+        //实例化SharedPreferences.Editor对象
+        editor = sharedPreferences.edit();
+        final String state = sharedPreferences.getString("state", "");
+        final String videosec = sharedPreferences.getString("videosec", "");
+        final String ref_state = sharedPreferences.getString("ref_state", "");
+        final String videoUrl = sharedPreferences.getString("videoUrl", "");
+
+        if(state!=null&&!state.equals("")){
+            if(state.equals("recording")) {
+                new AlertDialog.Builder(activity,
+                        AlertDialog.THEME_HOLO_DARK)
+                        .setTitle("信息")
+                        .setMessage("上次视频录制未正常退出，是否继续上次视频录制？")
+                        .setPositiveButton("继续",
+                                new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface arg0,
+                                                        int arg1) {
+
+//										Intent intent = new Intent(VideoSelectionActivity2.this,VideoActivity.class);
+//										Bundle bundle = new Bundle();
+                                        bundle.clear();
+                                        bundle.putString("record_sec", videosec);
+                                        bundle.putString("preVideo", state);
+                                        if(videoUrl.equals("")){
+                                            bundle.putString("ref_state", ref_state);
+                                            if(ref_state.equals("new_ref")){
+                                                String picPath = sharedPreferences.getString("picPath", "");
+                                                bundle.putString("ref_path", picPath);
+
+                                            } else if(ref_state.equals("s_ref")){
+                                                int position = sharedPreferences.getInt("pic_index", -1);
+                                                bundle.putInt("pic_index", position);
+                                            }
+
+                                            intent.putExtras(bundle);
+                                            startActivity(intent);
+                                            activity.finish();
+
+                                        }else {
+                                            Intent intent1 = new Intent(getContext(),VideoAndRecording.class);
+                                            bundle.putString("videoUrl", videoUrl);
+                                            intent1.putExtras(bundle);
+                                            startActivity(intent1);
+                                            activity.finish();
+                                        }
+
+                                    }
+                                }).setNegativeButton("放弃",
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface arg0,
+                                                int arg1) {
+
+                                editor.putString("state", "finished");
+                                editor.apply();
+                            }
+                        }).create().show();
+            }
+
+            if(state.equals("convertion")) {
+                new AlertDialog.Builder(activity,
+                        AlertDialog.THEME_HOLO_DARK)
+                        .setTitle("信息")
+                        .setMessage("上次视频压缩出错，是否继续压缩？")
+                        .setPositiveButton("继续",
+                                new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface arg0,
+                                                        int arg1) {
+
+//										Intent intent = new Intent(VideoSelectionActivity2.this,VideoActivity.class);
+//										Bundle bundle = new Bundle();
+                                        bundle.clear();
+                                        bundle.putString("record_sec", videosec);
+                                        bundle.putString("preVideo", state);
+
+                                        if(videoUrl.equals("")){
+                                            bundle.putString("ref_state", ref_state);
+                                            if(ref_state.equals("new_ref")){
+                                                String picPath = sharedPreferences.getString("picPath", "");
+                                                bundle.putString("ref_path", picPath);
+                                            }
+                                            else if(ref_state.equals("s_ref")){
+                                                int position = sharedPreferences.getInt("pic_index", -1);
+                                                bundle.putInt("pic_index", position);
+                                            }
+                                            intent.putExtras(bundle);
+                                            startActivity(intent);
+                                            activity.finish();
+                                        }
+                                        else {
+                                            Intent intent1 = new Intent(getContext(),VideoAndRecording.class);
+                                            bundle.putString("videoUrl", videoUrl);
+                                            intent1.putExtras(bundle);
+                                            startActivity(intent1);
+                                            activity.finish();
+                                        }
+
+                                    }
+                                }).setNegativeButton("放弃",
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface arg0,
+                                                int arg1) {
+
+                                editor.putString("state", "finished");
+                                editor.apply();
+                            }
+                        }).create().show();
+            }
+        }
+
     }
 
     @Override
@@ -142,25 +319,47 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
                 break;
 
             case R.id.album_ref_ibtn:
-                Toast.makeText(getContext(), "相册", Toast.LENGTH_SHORT).show();
-                showTimeSelection();
+                getPic();
                 break;
 
             case R.id.photograph_ref_ibtn:
-                Toast.makeText(getContext(), "拍照", Toast.LENGTH_SHORT).show();
-                showTimeSelection();
+                ContentValues values = new ContentValues();
+                photoUri = activity.getContentResolver().insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                takePic(photoUri);
                 break;
 
             case R.id.no_ref_ibtn:
-                Toast.makeText(getContext(), "无参考", Toast.LENGTH_SHORT).show();
-
-//                bundle = new Bundle();
-//                bundle.clear();
-//
-//                showTimeSelection();
+                bundle.clear();
+                bundle.putString("record_sec", videosec);
+                bundle.putString("ref_state", "no_ref");
+                bundle.putString("preVideo", "finished");
+                showTimeSelection();
                 break;
         }
+    }
 
+    public void takePic(Uri photouri) {// 拍照
+        String SDState = Environment.getExternalStorageState();
+        if (SDState.equals(Environment.MEDIA_MOUNTED)) {
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);// "android.media.action.IMAGE_CAPTURE"
+
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photouri);
+            SystemValue.per_fragment_index = SystemValue.cur_fragment_index;
+
+            startActivityForResult(intent, SystemValue.TAKE_PICTURE);
+        } else {
+            Toast.makeText(activity, "sd卡不可用", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public  void getPic() {
+        SystemValue.per_fragment_index = SystemValue.cur_fragment_index;
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_PICK);
+        startActivityForResult(intent, SystemValue.GET_PICTURE);
     }
 
     //进行激活
@@ -173,8 +372,6 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
                 Toast.makeText(getContext(), "请联网进行激活", Toast.LENGTH_SHORT).show();
             }else {//联网
                 goScan();//进行扫描激活
-
-
             }
         }
         return isActivation;
@@ -182,8 +379,7 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
 
     void showTimeSelection() {
         if (builder == null) {
-            builder = new AlertDialog.Builder(getActivity());
-
+            builder = new AlertDialog.Builder(getContext());
         }
         if (timeSelectView == null) {
             timeSelectView = LayoutInflater.from(getActivity()).inflate(R.layout.time_selection_layout, null);
@@ -197,42 +393,43 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
 
                 @Override
                 public void onClick(View v) {
+                    dialog.dismiss();
                     videosec = "10s";
                     ten_s_ibtn.setImageResource(R.drawable.ten_s_selected);
                     thirty_s_ibtn.setImageResource(R.drawable.fifteen_s_unselect);
                     sixty_s_ibtn.setImageResource(R.drawable.thirty_s_unselect);
                     bundle.putString("record_sec", videosec);
                     intent.putExtras(bundle);
-                    startActivity(intent);
-                    getActivity().finish();
+                    startActivityForResult(intent,606);
                 }
             });
             thirty_s_ibtn.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
+                    dialog.dismiss();
                     videosec = "15s";
                     ten_s_ibtn.setImageResource(R.drawable.ten_s_unselect);
                     thirty_s_ibtn.setImageResource(R.drawable.fifteen_s_select);
                     sixty_s_ibtn.setImageResource(R.drawable.thirty_s_unselect);
                     bundle.putString("record_sec", videosec);
                     intent.putExtras(bundle);
-                    startActivity(intent);
-                    getActivity().finish();
+                    startActivityForResult(intent,606);
                 }
             });
             sixty_s_ibtn.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
+                    dialog.dismiss();
                     videosec = "30s";
                     ten_s_ibtn.setImageResource(R.drawable.ten_s_unselect);
                     thirty_s_ibtn.setImageResource(R.drawable.fifteen_s_unselect);
                     sixty_s_ibtn.setImageResource(R.drawable.thirty_s_selected);
                     bundle.putString("record_sec", videosec);
                     intent.putExtras(bundle);
-                    startActivity(intent);
-                    getActivity().finish();
+                    startActivityForResult(intent,606);
+
                 }
             });
             time_select_cancel.setOnClickListener(new View.OnClickListener() {
@@ -245,9 +442,21 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
 
             builder.setView(timeSelectView);
             dialog = builder.create();
+        }else {
+            ten_s_ibtn.setImageResource(R.drawable.ten_s_unselect);
+            thirty_s_ibtn.setImageResource(R.drawable.fifteen_s_unselect);
+            sixty_s_ibtn.setImageResource(R.drawable.thirty_s_unselect);
         }
         dialog.show();
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (dialog != null && !activity.isFinishing()) {
+            dialog.dismiss();
+        }
     }
 
     public static boolean isNetworkAvailable(Context context) {

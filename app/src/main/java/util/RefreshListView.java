@@ -109,13 +109,13 @@ public class RefreshListView extends ListView implements OnScrollListener {
 
 	@Override
 	public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
-		// TODO Auto-generated method stub
+
 
 	}
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		// TODO Auto-generated method stub
+
 		if(scrollState == SCROLL_STATE_FLING || scrollState == SCROLL_STATE_IDLE){
 			if(getLastVisiblePosition() == getCount() - 1 && !isLoadingMore){//滑到最后了
 				footerView.setPadding(0, 0, 0, 0);

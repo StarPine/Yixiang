@@ -192,13 +192,13 @@ public class HomePageFragment extends Fragment {
 			
 			@Override
 			public void onRefreash() {
-				// TODO Auto-generated method stub
+
 				getAction(1, PAGE_SIZE, HEAD);
 			}
 			
 			@Override
 			public void onLoadMore() {
-				// TODO Auto-generated method stub
+
 				getAction(all_index+1, PAGE_SIZE, FOOT);
 				
 			}
@@ -211,7 +211,7 @@ public class HomePageFragment extends Fragment {
 //			
 //			@Override
 //			public void onSingleTap() {
-//				// TODO Auto-generated method stub
+//
 //				pic_show_rl.setVisibility(View.GONE);
 //			}
 //		});
@@ -219,7 +219,7 @@ public class HomePageFragment extends Fragment {
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				pic_show_rl.setVisibility(View.GONE);
 			}
 		});
@@ -238,7 +238,7 @@ public class HomePageFragment extends Fragment {
 //				
 //				@Override
 //				public void run() {
-					// TODO Auto-generated method stub
+
 					getAction(all_index, PAGE_SIZE, HEAD);
 //				}
 //			});
@@ -264,7 +264,7 @@ public class HomePageFragment extends Fragment {
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
+
 			if(list.size()==0){
 				no_data_rl1.setVisibility(View.VISIBLE);
 			}
@@ -276,19 +276,19 @@ public class HomePageFragment extends Fragment {
 
 		@Override
 		public Object getItem(int arg0) {
-			// TODO Auto-generated method stub
+
 			return null;
 		}
 
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
+
 			return position;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup arg2) {
-			// TODO Auto-generated method stub
+
 
 			final DrawingInfo drawingInfo = list.get(position);
 
@@ -352,7 +352,7 @@ public class HomePageFragment extends Fragment {
 
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+
 					SystemValue.curLocalDrawingInfo = drawingInfo;
 					Intent intent = new Intent(getActivity(),
 							DrawingActivity.class);
@@ -369,7 +369,7 @@ public class HomePageFragment extends Fragment {
 
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+
 					SystemValue.per_fragment_index = SystemValue.cur_fragment_index;
 					Intent intent = new Intent(Intent.ACTION_VIEW);
 					String type = "video/mp4";
@@ -383,7 +383,7 @@ public class HomePageFragment extends Fragment {
 
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+
 					ImageLoader.getInstance()
 							.displayImage(
 									SystemValue.basic_url
@@ -417,7 +417,7 @@ public class HomePageFragment extends Fragment {
 
 							@Override
 							public void onResponse(String response) {
-								// TODO Auto-generated method stub
+
 								Log.d("getAllDrawings_response", response);
 
 								try {
@@ -470,7 +470,7 @@ public class HomePageFragment extends Fragment {
 
 							@Override
 							public void onErrorResponse(VolleyError error) {
-								// TODO Auto-generated method stub
+
 
 								me_drawing_lv.onRefreadshComplete();
 								if(type == FOOT){
@@ -492,7 +492,7 @@ public class HomePageFragment extends Fragment {
 	
 //	@Override
 //	public void toRefresh() {
-//		// TODO Auto-generated method stub
+//
 //		all_index = 1;
 //		refresh.postDelayed(new Runnable() {
 //			@Override
@@ -505,7 +505,7 @@ public class HomePageFragment extends Fragment {
 
 //	@Override
 //	public void onFooterRefresh(PullToRefreshView view) {
-//		// TODO Auto-generated method stub
+//
 //		refresh.postDelayed(new Runnable() {
 //
 //			@Override
@@ -518,7 +518,7 @@ public class HomePageFragment extends Fragment {
 
 //	@Override
 //	public void onHeaderRefresh(PullToRefreshView view) {
-//		// TODO Auto-generated method stub
+//
 //		all_index = 1;
 //		refresh.postDelayed(new Runnable() {
 //

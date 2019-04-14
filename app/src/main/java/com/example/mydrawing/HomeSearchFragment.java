@@ -35,19 +35,19 @@ OnHeaderRefreshListener, OnFooterRefreshListener, Refresh{
 
 	@Override
 	public void toRefresh() {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void onFooterRefresh(PullToRefreshView view) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void onHeaderRefresh(PullToRefreshView view) {
-		// TODO Auto-generated method stub
+
 		
 	}
 

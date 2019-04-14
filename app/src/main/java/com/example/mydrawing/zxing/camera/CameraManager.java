@@ -39,10 +39,10 @@ public final class CameraManager {
 
 	private static final String TAG = CameraManager.class.getSimpleName();
 
-	private static final int MIN_FRAME_WIDTH = 240;
-	private static final int MIN_FRAME_HEIGHT = 240;
-	private static final int MAX_FRAME_WIDTH = 1200; // = 5/8 * 1920
-	private static final int MAX_FRAME_HEIGHT = 675; // = 5/8 * 1080
+	private static int MIN_FRAME_WIDTH = 240;
+	private static int MIN_FRAME_HEIGHT = 240;
+	private static int MAX_FRAME_WIDTH = 1200; // = 5/8 * 1920
+	private static int MAX_FRAME_HEIGHT = 675; // = 5/8 * 1080
 
 	private final Context context;
 	private final CameraConfigurationManager configManager;
@@ -237,6 +237,44 @@ public final class CameraManager {
 			Log.d(TAG, "Calculated framing rect: " + framingRect);
 		}
 		return framingRect;
+	}
+
+	public Rect getFramingRect2() {
+		Point screenResolution = configManager.getScreenResolution();
+		if (framingRect == null) {
+			if (camera == null) {
+				return null;
+			}
+
+			MIN_FRAME_WIDTH = Dp2Px(context,180);
+			MIN_FRAME_HEIGHT =Dp2Px(context,180);
+			MAX_FRAME_WIDTH = Dp2Px(context,280);
+			MAX_FRAME_HEIGHT =Dp2Px(context,240);
+
+			int width = screenResolution.x * 2/3;
+			if (width < MIN_FRAME_WIDTH) {
+				width = MIN_FRAME_WIDTH;
+			} else if (width > MAX_FRAME_WIDTH) {
+				width = MAX_FRAME_WIDTH;
+			}
+			int height = screenResolution.y * 2/3;
+			if (height < MIN_FRAME_HEIGHT) {
+				height = MIN_FRAME_HEIGHT;
+			}
+			else if (height > MAX_FRAME_HEIGHT) {
+				height = MAX_FRAME_HEIGHT;
+			}
+			int leftOffset = (screenResolution.x - width) / 2;
+			int topOffset = (screenResolution.y - height) / 2-100;
+			framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + width);
+			Log.d(TAG, "Calculated framing rect: " + framingRect);
+		}
+		return framingRect;
+	}
+
+	public static  int Dp2Px( Context context,float dp) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return (int) (dp * scale + 0.5f);
 	}
 
 	private static int findDesiredDimensionInRange(int resolution, int hardMin,

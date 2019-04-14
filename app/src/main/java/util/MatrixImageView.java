@@ -72,7 +72,7 @@ public class MatrixImageView extends ImageView{
 	}
 	@Override
 	public void setImageBitmap(Bitmap bm) {
-		// TODO Auto-generated method stub
+
 		super.setImageBitmap(bm);
 		setImageTimes++;
 		//大小为0 表示当前控件大小未测量  设置监听函数  在绘制前赋值
@@ -143,7 +143,7 @@ public class MatrixImageView extends ImageView{
 		private PointF mStartPoint = new PointF();
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
-			// TODO Auto-generated method stub
+
 			switch (event.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:
 				//设置拖动模式
@@ -393,7 +393,7 @@ public class MatrixImageView extends ImageView{
 		 *  @return  当前缩放级别小于模板缩放级别时，重置 
 		 */
 		private boolean checkRest() {
-			// TODO Auto-generated method stub
+
 			float[] values=new float[9];
 			getImageMatrix().getValues(values);
 			//获取当前X轴缩放级别
@@ -462,13 +462,13 @@ public class MatrixImageView extends ImageView{
 		}
 		@Override
 		public boolean onSingleTapUp(MotionEvent e) {
-			// TODO Auto-generated method stub
+
 			return super.onSingleTapUp(e);
 		}
 
 		@Override
 		public void onLongPress(MotionEvent e) {
-			// TODO Auto-generated method stub
+
 			super.onLongPress(e);
 		}
 
@@ -486,13 +486,13 @@ public class MatrixImageView extends ImageView{
 
 		@Override
 		public void onShowPress(MotionEvent e) {
-			// TODO Auto-generated method stub
+
 			super.onShowPress(e);
 		}
 
 		@Override
 		public boolean onDoubleTapEvent(MotionEvent e) {
-			// TODO Auto-generated method stub
+
 			return super.onDoubleTapEvent(e);
 		}
 

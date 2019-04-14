@@ -96,7 +96,7 @@ public class VideoSelectionActivity extends Activity{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 					long arg3) {
-				// TODO Auto-generated method stub
+
 
 				Intent intent = new Intent(VideoSelectionActivity.this,VideoActivity.class);
 				Bundle bundle = new Bundle();
@@ -133,7 +133,7 @@ public class VideoSelectionActivity extends Activity{
 									@Override
 									public void onClick(DialogInterface arg0,
 											int arg1) {
-										// TODO Auto-generated method stub
+
 										Intent intent = new Intent(VideoSelectionActivity.this,VideoActivity.class);
 										Bundle bundle = new Bundle();
 										bundle.putString("record_sec", videosec);
@@ -157,7 +157,7 @@ public class VideoSelectionActivity extends Activity{
 									@Override
 									public void onClick(DialogInterface arg0,
 											int arg1) {
-										// TODO Auto-generated method stub
+
 										editor.putString("state", "finished");
 										editor.apply();
 									}
@@ -175,7 +175,7 @@ public class VideoSelectionActivity extends Activity{
 									@Override
 									public void onClick(DialogInterface arg0,
 											int arg1) {
-										// TODO Auto-generated method stub
+
 										Intent intent = new Intent(VideoSelectionActivity.this,VideoActivity.class);
 										Bundle bundle = new Bundle();
 										bundle.putString("record_sec", videosec);
@@ -199,7 +199,7 @@ public class VideoSelectionActivity extends Activity{
 									@Override
 									public void onClick(DialogInterface arg0,
 											int arg1) {
-										// TODO Auto-generated method stub
+
 										editor.putString("state", "finished");
 										editor.apply();
 									}
@@ -259,7 +259,7 @@ public class VideoSelectionActivity extends Activity{
 		
 		@Override
 		public View getView(int position, View arg1, ViewGroup arg2) {
-			// TODO Auto-generated method stub
+
 			ImageView imageView = new ImageView(VideoSelectionActivity.this);
 			AbsListView.LayoutParams params = new AbsListView.LayoutParams(
 					(int) (screenWidth / 3.2), (int) (screenWidth / 3.2));
@@ -271,19 +271,19 @@ public class VideoSelectionActivity extends Activity{
 		
 		@Override
 		public long getItemId(int arg0) {
-			// TODO Auto-generated method stub
+
 			return 0;
 		}
 		
 		@Override
 		public Object getItem(int arg0) {
-			// TODO Auto-generated method stub
+
 			return null;
 		}
 		
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
+
 			return gv_pics.length;
 		}
 	};

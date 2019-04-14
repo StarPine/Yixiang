@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -34,7 +35,7 @@ public class MainActivity2 extends FragmentActivity {
     private boolean isCreation = true;
     int back_times = 0;
 
-    Handler mHandler = new Handler(){
+    Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -59,7 +60,7 @@ public class MainActivity2 extends FragmentActivity {
 
             @Override
             public void run() {
-                // TODO Auto-generated method stub
+
                 start_loading_rl.setVisibility(View.GONE);
             }
         }, 1000);
@@ -77,23 +78,24 @@ public class MainActivity2 extends FragmentActivity {
 
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.content,homeRecordFragment);
-        fragmentTransaction.add(R.id.content,homeCreationFragment);
+        fragmentTransaction.add(R.id.content, homeRecordFragment);
+        fragmentTransaction.add(R.id.content, homeCreationFragment);
         fragmentTransaction.commit();
     }
 
     @Override
     public void onBackPressed() {
         back_times++;
-        if(back_times>=2){
+        if (back_times >= 2) {
             backToHome();
-        }else {
+            finish();
+        } else {
             Toast.makeText(this, "再按一次退出艺享", Toast.LENGTH_SHORT).show();
             mHandler.postDelayed(backRunnable, 3000);
         }
     }
 
-    void backToHome(){
+    void backToHome() {
         PackageManager pm = getPackageManager();
         ResolveInfo homeInfo =
                 pm.resolveActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME), 0);
@@ -102,6 +104,15 @@ public class MainActivity2 extends FragmentActivity {
         startIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         startIntent.setComponent(new ComponentName(ai.packageName, ai.name));
         startActivitySafely(startIntent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 606) {
+            Log.e("Starpin", "onActivityResult: "+606 );
+            home_drawing_iv.performClick();
+        }
     }
 
     private void startActivitySafely(Intent intent) {
@@ -121,8 +132,8 @@ public class MainActivity2 extends FragmentActivity {
 
         @Override
         public void run() {
-            // TODO Auto-generated method stub
-            back_times=0;
+
+            back_times = 0;
         }
     };
 
@@ -137,12 +148,12 @@ public class MainActivity2 extends FragmentActivity {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 hidtFragment(ft);
-                if(isCreation){
+                if (isCreation) {
                     isCreation = false;
                     home_drawing_iv.setImageResource(R.drawable.home_jilu);
                     ft.show(homeRecordFragment);
                     ft.commit();
-                }else {
+                } else {
                     isCreation = true;
                     home_drawing_iv.setImageResource(R.drawable.home_one);
                     ft.show(homeCreationFragment);
@@ -153,11 +164,11 @@ public class MainActivity2 extends FragmentActivity {
     }
 
     //隐藏所有的fragment
-    private void hidtFragment(FragmentTransaction fragmentTransaction){
-        if (homeCreationFragment != null){
+    private void hidtFragment(FragmentTransaction fragmentTransaction) {
+        if (homeCreationFragment != null) {
             fragmentTransaction.hide(homeCreationFragment);
         }
-        if (homeRecordFragment != null){
+        if (homeRecordFragment != null) {
             fragmentTransaction.hide(homeRecordFragment);
         }
     }

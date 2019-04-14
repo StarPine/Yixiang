@@ -161,7 +161,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 //	@Override
 //	public void onStart() {
-//		// TODO Auto-generated method stub
+//
 //		super.onStart();
 //		IntentFilter intentFilter = new IntentFilter();
 //		intentFilter.addAction("MeDrawingService");
@@ -172,7 +172,7 @@ public class HomeMeFragment extends Fragment{// implements
 //
 //	@Override
 //	public void onStop() {
-//		// TODO Auto-generated method stub
+//
 //		getActivity().unregisterReceiver(refreshReceiver);
 //		super.onStop();
 //	}
@@ -209,7 +209,7 @@ public class HomeMeFragment extends Fragment{// implements
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+
 				me_drawing_lv.setAdapter(lvAdapter);
 				getAction(1, PAGE_SIZE, HEAD);
 			}
@@ -225,13 +225,13 @@ public class HomeMeFragment extends Fragment{// implements
 			
 			@Override
 			public void onRefreash() {
-				// TODO Auto-generated method stub
+
 				getAction(1, PAGE_SIZE, HEAD);
 			}
 			
 			@Override
 			public void onLoadMore() {
-				// TODO Auto-generated method stub
+
 				getAction(1+all_index, PAGE_SIZE, FOOT);
 				
 			}
@@ -245,7 +245,7 @@ public class HomeMeFragment extends Fragment{// implements
 //			
 //			@Override
 //			public void onSingleTap() {
-//				// TODO Auto-generated method stub
+//
 //				pic_show_rl.setVisibility(View.GONE);
 //			}
 //		});
@@ -253,7 +253,7 @@ public class HomeMeFragment extends Fragment{// implements
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				pic_show_rl.setVisibility(View.GONE);
 			}
 		});
@@ -289,7 +289,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
+
 			if(list.size()==0){
 				no_data_rl.setVisibility(View.VISIBLE);
 			}
@@ -301,19 +301,19 @@ public class HomeMeFragment extends Fragment{// implements
 
 		@Override
 		public Object getItem(int arg0) {
-			// TODO Auto-generated method stub
+
 			return null;
 		}
 
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
+
 			return position;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup arg2) {
-			// TODO Auto-generated method stub
+
 
 			final DrawingInfo drawingInfo = list.get(position);
 
@@ -388,7 +388,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+
 					// 分享
 					cur_drawing_to_change_index = p;
 					SystemValue.curLocalDrawingInfo = drawingInfo;
@@ -407,7 +407,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+
 					SystemValue.per_fragment_index = SystemValue.cur_fragment_index;
 					Intent intent = new Intent(Intent.ACTION_VIEW);
 					String type = "video/mp4";
@@ -421,7 +421,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+
 					ImageLoader.getInstance()
 							.displayImage(
 									SystemValue.basic_url
@@ -436,7 +436,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+
 					cur_img_to_change_iv = img_iv;
 					cur_drawing_to_change_index = p;
 
@@ -452,7 +452,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+
 					new AlertDialog.Builder(getActivity(),
 							AlertDialog.THEME_HOLO_DARK)
 							.setTitle("删除作品")
@@ -473,7 +473,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+
 					RelativeLayout ll = new RelativeLayout(getActivity());
 					final EditText et = new EditText(getActivity());
 					ImageView iView = new ImageView(getActivity());
@@ -548,7 +548,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 					@Override
 					public void onResponse(String response) {
-						// TODO Auto-generated method stub
+
 						Log.d("changeContent_response", response);
 
 						try {
@@ -590,7 +590,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						// TODO Auto-generated method stub
+
 						Toast.makeText(
 								getActivity(),
 								getActivity().getResources().getString(
@@ -634,7 +634,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 					@Override
 					public void onResponse(String response) {
-						// TODO Auto-generated method stub
+
 						Log.d("delete", "_drawings_response"+response);
 
 						try {
@@ -675,7 +675,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						// TODO Auto-generated method stub
+
 						Toast.makeText(
 								getActivity(),
 								getActivity().getResources().getString(
@@ -698,7 +698,7 @@ public class HomeMeFragment extends Fragment{// implements
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+
 				
 				String url = SystemValue.basic_url
 						+ "drawing.do?action=getPersonDrawings";
@@ -710,7 +710,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 							@Override
 							public void onResponse(String response) {
-								// TODO Auto-generated method stub
+
 								Log.d("get_me", "_drawings_response"+response);
 
 								try {
@@ -760,7 +760,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 							@Override
 							public void onErrorResponse(VolleyError error) {
-								// TODO Auto-generated method stub
+
 								Toast.makeText(
 										getActivity(),
 										getActivity().getResources().getString(
@@ -827,7 +827,7 @@ public class HomeMeFragment extends Fragment{// implements
 									@Override
 									public void onClick(DialogInterface arg0,
 											int arg1) {
-										// TODO Auto-generated method stub
+
 										new_picPath = ImageUtil.compressImage(
 												getActivity(),
 												file.getAbsolutePath(), false);
@@ -953,7 +953,7 @@ public class HomeMeFragment extends Fragment{// implements
 
 //	@Override
 //	public void toRefresh() {
-//		// TODO Auto-generated method stub
+//
 //		all_index = 1;
 //		refresh.postDelayed(new Runnable() {
 //			@Override
@@ -966,7 +966,7 @@ public class HomeMeFragment extends Fragment{// implements
 //
 //	@Override
 //	public void onFooterRefresh(PullToRefreshView view) {
-//		// TODO Auto-generated method stub
+//
 //		refresh.postDelayed(new Runnable() {
 //
 //			@Override
@@ -979,7 +979,7 @@ public class HomeMeFragment extends Fragment{// implements
 //
 //	@Override
 //	public void onHeaderRefresh(PullToRefreshView view) {
-//		// TODO Auto-generated method stub
+//
 //		all_index = 1;
 //		refresh.postDelayed(new Runnable() {
 //

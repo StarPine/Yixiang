@@ -36,7 +36,7 @@ public class VideoCapture_se {
 
 
 	
-	public static void genMp4(String path, final List<Integer> saved_frame_indexs,
+	public static String genMp4(String path, final List<Integer> saved_frame_indexs,
 			final double frameRate,final Handler handler, String localVideoPath,final Context context) {
 		// init
 		if (path != null) {
@@ -110,6 +110,7 @@ public class VideoCapture_se {
 				}
 			}
 		}.start();
+		return savePath;
 	}
 
 	private static Bitmap getImageByPath(String path) {

@@ -27,6 +27,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 
@@ -102,7 +103,7 @@ public final class ViewfinderView extends View {
         }
 
         // frame为取景框
-        Rect frame = cameraManager.getFramingRect();
+        Rect frame = cameraManager.getFramingRect2();
         Rect previewFrame = cameraManager.getFramingRectInPreview();
         if (frame == null || previewFrame == null) {
             return;
@@ -128,7 +129,7 @@ public final class ViewfinderView extends View {
             // Draw a red "laser scanner" line through the middle to show
             // decoding is active
             drawFrameBounds(canvas, frame);
-            drawStatusText(canvas, frame, width);
+//            drawStatusText(canvas, frame, width);
 
             // 绘制扫描线
             // paint.setColor(laserColor);
@@ -238,22 +239,40 @@ public final class ViewfinderView extends View {
     private void drawStatusText(Canvas canvas, Rect frame, int width) {
 
         String statusText1 = getResources().getString(
-                R.string.viewfinderview_status_text1);
+                R.string.viewfinderview_status_text3);
         String statusText2 = getResources().getString(
                 R.string.viewfinderview_status_text2);
-        int statusTextSize = 45;
-        int statusPaddingTop = 180;
+        int statusTextSize = dip2px(getContext(),20);
+        int statusPaddingTop = 10;
 
         paint.setColor(statusColor);
         paint.setTextSize(statusTextSize);
 
         int textWidth1 = (int) paint.measureText(statusText1);
-        canvas.drawText(statusText1, (width - textWidth1) / 2, frame.top
-                - statusPaddingTop, paint);
+        canvas.drawText(statusText1, (width - textWidth1) / 2, 250, paint);
+        Log.e("Starpine", "url: " + (frame.top - frame.bottom));
 
-        int textWidth2 = (int) paint.measureText(statusText2);
-        canvas.drawText(statusText2, (width - textWidth2) / 2, frame.top
-                - statusPaddingTop + 60, paint);
+//        int textWidth2 = (int) paint.measureText(statusText2);
+//        canvas.drawText(statusText2, (width - textWidth2) / 2, frame.top
+//                - statusPaddingTop + 60, paint);
+    }
+
+    /**
+     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+     */
+    public static int dip2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+
+    }
+
+    /**
+     * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
+     */
+    public static int px2dip(Context context, float pxValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
+
     }
 
     /**

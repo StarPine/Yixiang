@@ -116,7 +116,7 @@ public class MainActivity extends FragmentActivity {
 							@Override
 							public void onClick(
 									DialogInterface arg0, int arg1) {
-								// TODO Auto-generated method stub
+
 								dowload_rl.setVisibility(View.VISIBLE);
 								updateVersion.downloadLastetVersion(video_gen_pb, mHandler);
 							}
@@ -133,7 +133,7 @@ public class MainActivity extends FragmentActivity {
 					
 					@Override
 					public void run() {
-						// TODO Auto-generated method stub
+
 						initDownloadView();
 						updateVersion.getLatestVersion(mHandler);
 					}
@@ -152,7 +152,7 @@ public class MainActivity extends FragmentActivity {
 						
 						@Override
 						public void run() {
-							// TODO Auto-generated method stub
+
 							initDownloadView();
 							updateVersion.getLatestVersion(mHandler);
 						}
@@ -198,7 +198,7 @@ public class MainActivity extends FragmentActivity {
 //			
 //			@Override
 //			public void run() {
-//				// TODO Auto-generated method stub
+//
 //				initDownloadView();
 //				updateVersion.getLatestVersion(mHandler);
 //			}
@@ -211,7 +211,7 @@ public class MainActivity extends FragmentActivity {
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+
 				start_loading_rl.setVisibility(View.GONE);
 			}
 		}, 1000);
@@ -224,7 +224,7 @@ public class MainActivity extends FragmentActivity {
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				String address = advertisement.getAddress();
 				if(address!=null&&!address.equals("")){
 					Uri uri = Uri.parse(address);  
@@ -282,7 +282,7 @@ public class MainActivity extends FragmentActivity {
 		
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
+
 			back_times=0;
 		}
 	};
@@ -397,7 +397,7 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private void setTabSelection(int index) {
-		// TODO Auto-generated method stub
+
 		// Toast.makeText(this, "index:"+index, Toast.LENGTH_SHORT).show();
 		SystemValue.per_fragment_index = SystemValue.cur_fragment_index;
 		SystemValue.cur_fragment_index = index;

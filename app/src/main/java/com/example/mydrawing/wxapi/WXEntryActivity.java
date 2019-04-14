@@ -28,13 +28,13 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
 	@Override
 	public void onReq(BaseReq arg0) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void onResp(BaseResp resp) {
-		// TODO Auto-generated method stub
+
 		int result = 0;
 		
 		switch (resp.errCode) {

@@ -18,7 +18,9 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:layout_gravity="top"
-        android:background="#99000000">
+        android:background="#99000000"
+        android:visibility="gone"
+        >
         
         <ImageButton
             android:id="@+id/capture_imageview_back"
@@ -36,5 +38,37 @@
             android:text="扫一扫"/>
         
     </RelativeLayout>
+    <TextView
+        android:id="@+id/code_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/series_not_end"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:paddingBottom="100dp"
+        android:text="此激活码无效"
+        android:visibility="gone"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:paddingTop="50dp"
+        android:text="请扫描实体产品上的二维码"
+        />
+    <ImageView
+        android:id="@+id/iv_back_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/back_icon"
+        android:paddingLeft="20dp"
+        android:paddingBottom="20dp"
+        android:layout_gravity="bottom"
+        />
 
 </merge>

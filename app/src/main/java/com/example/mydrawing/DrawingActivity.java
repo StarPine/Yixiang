@@ -194,7 +194,7 @@ public class DrawingActivity extends Activity  {
 						@Override
 						public void onClick(
 								DialogInterface arg0, int arg1) {
-							// TODO Auto-generated method stub
+
 							finish();
 						}
 					}).setNegativeButton("取消", null).create().show();
@@ -272,7 +272,7 @@ public class DrawingActivity extends Activity  {
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				Intent intent = new Intent(Intent.ACTION_VIEW);
 		        String type = "video/mp4";
 		        Uri uri = Uri.parse(video_local_path);
@@ -285,7 +285,7 @@ public class DrawingActivity extends Activity  {
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				pic_show_rl.setVisibility(View.VISIBLE);
 				drawing_rl.setVisibility(View.GONE);
 				if(isUpload){
@@ -313,7 +313,7 @@ public class DrawingActivity extends Activity  {
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				ContentValues values = new ContentValues();
 				photoUri = DrawingActivity.this.getContentResolver().insert(
 						MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
@@ -325,7 +325,7 @@ public class DrawingActivity extends Activity  {
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				pic_show_rl.setVisibility(View.GONE);
 				drawing_rl.setVisibility(View.VISIBLE);
 			}
@@ -334,7 +334,7 @@ public class DrawingActivity extends Activity  {
 //			
 //			@Override
 //			public void onSingleTap() {
-//				// TODO Auto-generated method stub
+//
 //				pic_show_rl.setVisibility(View.GONE);
 //				drawing_rl.setVisibility(View.VISIBLE);
 //			}
@@ -344,7 +344,7 @@ public class DrawingActivity extends Activity  {
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				cur_share_state = share_friend;
 				if((isUpload&&!uloadFinised)||(!isUpload&&uloadFinised)){
 					
@@ -381,7 +381,7 @@ public class DrawingActivity extends Activity  {
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				cur_share_state = share_circle;
 				if((isUpload&&!uloadFinised)||(!isUpload&&uloadFinised)){
 					
@@ -417,7 +417,7 @@ public class DrawingActivity extends Activity  {
 			@SuppressLint("NewApi")
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				if(!isUpload&&!uloadFinised){
 					new AlertDialog.Builder(DrawingActivity.this,AlertDialog.THEME_HOLO_DARK)
 					.setTitle("信息")
@@ -428,7 +428,7 @@ public class DrawingActivity extends Activity  {
 								@Override
 								public void onClick(
 										DialogInterface arg0, int arg1) {
-									// TODO Auto-generated method stub
+
 									finish();
 								}
 							}).setNegativeButton("取消", null).create().show();

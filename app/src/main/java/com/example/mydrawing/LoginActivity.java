@@ -85,7 +85,7 @@ public class LoginActivity extends Activity{
 			
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				// TODO Auto-generated method stub
+
 				phone = phone_et.getText().toString().trim();
 				pwd = pwd_et.getText().toString().trim();
 				if(!phone.equals("")
@@ -103,13 +103,13 @@ public class LoginActivity extends Activity{
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
-				// TODO Auto-generated method stub
+
 				
 			}
 			
 			@Override
 			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
+
 				
 			}
 		});
@@ -118,7 +118,7 @@ public class LoginActivity extends Activity{
 			
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				// TODO Auto-generated method stub
+
 				phone = phone_et.getText().toString().trim();
 				pwd = pwd_et.getText().toString().trim();
 				if(!phone.equals("")
@@ -136,13 +136,13 @@ public class LoginActivity extends Activity{
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
-				// TODO Auto-generated method stub
+
 				
 			}
 			
 			@Override
 			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
+
 				
 			}
 		});
@@ -151,7 +151,7 @@ public class LoginActivity extends Activity{
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				if(isLogin){
 					phone = phone_et.getText().toString().trim();
 					pwd = pwd_et.getText().toString().trim();
@@ -166,7 +166,7 @@ public class LoginActivity extends Activity{
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				Intent intent = new Intent(LoginActivity.this,Register.class);
 				startActivity(intent);
 			}
@@ -176,7 +176,7 @@ public class LoginActivity extends Activity{
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				Intent intent = new Intent(LoginActivity.this,ForgetPwd.class);
 				startActivity(intent);
 			}
@@ -186,7 +186,7 @@ public class LoginActivity extends Activity{
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				finish();
 			}
 		});
@@ -204,7 +204,7 @@ public class LoginActivity extends Activity{
 
 					@Override
 					public void onResponse(String response) {
-						// TODO Auto-generated method stub
+
 						Log.d("login_response", response);
 
 						try {
@@ -240,7 +240,7 @@ public class LoginActivity extends Activity{
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						// TODO Auto-generated method stub
+
 						Toast.makeText(
 								LoginActivity.this,
 								"登录失败，请稍后重试！",

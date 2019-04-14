@@ -75,6 +75,7 @@
             android:progress="100"
             android:thumbOffset="0dip" />
 
+
         <util.VerticalSeekBar
             android:id="@+id/vseekbar_right"
             style="@style/Widget.SeekBar.Transparency"

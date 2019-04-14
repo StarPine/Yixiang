@@ -26,11 +26,11 @@
             android:max="100"
             android:progress="0" />
 
-        <TextView
+        <ImageView
             android:id="@+id/loading_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="请稍等，正在浓缩成纪录片:)"
+            android:src="@drawable/compress_to_video"
             android:textColor="#000000"
             android:textSize="@dimen/content" />
     </LinearLayout>

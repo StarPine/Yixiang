@@ -4,12 +4,10 @@ package com.example.mydrawing.zxing.android;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -17,12 +15,13 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import com.example.mydrawing.R;
 
-import com.example.mydrawing.second.YXbbean;
+import com.example.mydrawing.second.YXBean;
 import com.example.mydrawing.zxing.camera.CameraManager;
 import com.example.mydrawing.zxing.view.ViewfinderView;
 import com.google.gson.Gson;
@@ -30,12 +29,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
 
@@ -71,7 +65,9 @@ public final class CaptureActivity extends Activity implements
     // 声音、震动控制
     private BeepManager beepManager;
 
-    private ImageButton imageButton_back;
+    private ImageView iv_back_icon;
+    private TextView code_message;
+    private SurfaceHolder surfaceHolder;
 
     public ViewfinderView getViewfinderView() {
         return viewfinderView;
@@ -105,8 +101,9 @@ public final class CaptureActivity extends Activity implements
         inactivityTimer = new InactivityTimer(this);
         beepManager = new BeepManager(this);
 
-        imageButton_back = (ImageButton) findViewById(R.id.capture_imageview_back);
-        imageButton_back.setOnClickListener(new View.OnClickListener() {
+        iv_back_icon = (ImageView) findViewById(R.id.iv_back_icon);
+        code_message = (TextView) findViewById(R.id.code_message);
+        iv_back_icon.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -130,7 +127,7 @@ public final class CaptureActivity extends Activity implements
         handler = null;
 
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
-        SurfaceHolder surfaceHolder = surfaceView.getHolder();
+        surfaceHolder = surfaceView.getHolder();
         if (hasSurface) {
             // activity在paused时但不会stopped,因此surface仍旧存在；
             // surfaceCreated()不会调用，因此在这里初始化camera
@@ -208,23 +205,19 @@ public final class CaptureActivity extends Activity implements
             String macAddress = MacAddressUtil.getMacAddress(this);
             final String url = SystemValue.barcode_url + rawResult.getText() + "/appName/art/deviceNumber/" + macAddress + "/datatype/json";
             getYXHttp(url);
-            finish();
         }
-
     }
 
     /**
      * 网络GET请求
      */
-    public void getYXHttp(String url) {
+    public void getYXHttp(final String url) {
         OkHttpClient client = new OkHttpClient();
         //创建请求对象
         Request request = new Request.Builder().url(url).build();
         //创建Call请求队列
         //请求都是放到一个队列里面的
         Call call = client.newCall(request);
-
-        Log.d(TAG, "get() returned: " + call + "------------");
         //开始请求
         call.enqueue(new Callback() {
             //       失败，成功的方法都是在子线程里面，不能直接更新UI
@@ -237,16 +230,44 @@ public final class CaptureActivity extends Activity implements
             public void onResponse(Call call, Response response) throws IOException {
 
                 String string = response.body().string();
-                Gson  gson = new Gson();
-                YXbbean yXbean = gson.fromJson(string,YXbbean.class);
-                int code = yXbean.getCode();
-//                Log.e("Starpine", "handleDecode: " + code);
-                if(code == 200){
-                    SharedPreferences sharedPreferences= getSharedPreferences("activation", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("activationCode", code);
-                    editor.putBoolean("isActivation",true);
-                    editor.commit();
+                Gson gson = new Gson();
+                final YXBean yxBeanan = gson.fromJson(string, YXBean.class);
+                int code = yxBeanan.getCode();
+                final String message = yxBeanan.getMessage();
+                Log.e("Starpine", "handleDecode: " + yxBeanan.getMessage());
+                Log.e("Starpine", "url: " + url);
+                if (code == 200) {
+                    if (message.equals("激活成功")) {
+                        showActivationMessage(message);
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        SharedPreferences sharedPreferences = getSharedPreferences("activation", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("activationSu", message);
+                        editor.putBoolean("isActivation", true);
+                        editor.commit();
+                        finish();
+                    } else {
+                        showActivationMessage(message);
+                    }
+                } else{
+                    showActivationMessage(message);
+                }
+            }
+        });
+    }
+
+    private void showActivationMessage(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                code_message.setText(message);
+                code_message.setVisibility(View.VISIBLE);
+                if (!message.equals("激活成功")) {
+                    handler.restartPreviewAndDecode();
                 }
             }
         });

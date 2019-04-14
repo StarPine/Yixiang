@@ -106,28 +106,27 @@ public class VideoSelectionActivity2 extends Activity{
 		bundle = new Bundle();
 		
 		selectPhotoUtil = new SelectPhotoUtil(this);
-		gridView.setAdapter(myAdapter);
-		
-		gridView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-					long arg3) {
-				// TODO Auto-generated method stub
-
-//				Intent intent = new Intent(VideoSelectionActivity2.this,VideoActivity.class);
-//				Bundle bundle = new Bundle();
-				bundle.clear();
-				bundle.putString("record_sec", videosec);
-				bundle.putString("ref_state", "s_ref");
-				bundle.putInt("pic_index", position);
-				bundle.putString("preVideo", "finished");
-				showTimeSelection();
-//				intent.putExtras(bundle);
-//				startActivity(intent);
-//				finish();
-			}
-		});
+//		gridView.setAdapter(myAdapter);
+//
+//		gridView.setOnItemClickListener(new OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+//					long arg3) {
+//
+////				Intent intent = new Intent(VideoSelectionActivity2.this,VideoActivity.class);
+////				Bundle bundle = new Bundle();
+//				bundle.clear();
+//				bundle.putString("record_sec", videosec);
+//				bundle.putString("ref_state", "s_ref");
+//				bundle.putInt("pic_index", position);
+//				bundle.putString("preVideo", "finished");
+//				showTimeSelection();
+////				intent.putExtras(bundle);
+////				startActivity(intent);
+////				finish();
+//			}
+//		});
 		preVideoDeal();
 	}
 	
@@ -157,7 +156,7 @@ public class VideoSelectionActivity2 extends Activity{
 		final String videoUrl = sharedPreferences.getString("videoUrl", "");
 		
 		if(state!=null&&!state.equals("")){
-			if(state.equals("recording")){
+			if(state.equals("recording")) {
 				new Builder(this,
 						AlertDialog.THEME_HOLO_DARK)
 						.setTitle("信息")
@@ -168,7 +167,7 @@ public class VideoSelectionActivity2 extends Activity{
 									@Override
 									public void onClick(DialogInterface arg0,
 											int arg1) {
-										// TODO Auto-generated method stub
+
 //										Intent intent = new Intent(VideoSelectionActivity2.this,VideoActivity.class);
 //										Bundle bundle = new Bundle();
 										bundle.clear();
@@ -204,14 +203,14 @@ public class VideoSelectionActivity2 extends Activity{
 									@Override
 									public void onClick(DialogInterface arg0,
 											int arg1) {
-										// TODO Auto-generated method stub
+
 										editor.putString("state", "finished");
 										editor.apply();
 									}
 								}).create().show();
 			}
 			
-			if(state.equals("convertion")){
+			if(state.equals("convertion")) {
 				new Builder(this,
 						AlertDialog.THEME_HOLO_DARK)
 						.setTitle("信息")
@@ -222,7 +221,7 @@ public class VideoSelectionActivity2 extends Activity{
 									@Override
 									public void onClick(DialogInterface arg0,
 											int arg1) {
-										// TODO Auto-generated method stub
+
 //										Intent intent = new Intent(VideoSelectionActivity2.this,VideoActivity.class);
 //										Bundle bundle = new Bundle();
 										bundle.clear();
@@ -258,7 +257,7 @@ public class VideoSelectionActivity2 extends Activity{
 									@Override
 									public void onClick(DialogInterface arg0,
 											int arg1) {
-										// TODO Auto-generated method stub
+
 										editor.putString("state", "finished");
 										editor.apply();
 									}
@@ -271,7 +270,6 @@ public class VideoSelectionActivity2 extends Activity{
 	void showTimeSelection(){
 		if(builder==null){
 			builder = new Builder(this);
-			
 		}
 		if(timeSelectView==null){
 			timeSelectView = LayoutInflater.from(this).inflate(R.layout.time_selection_layout, null);
@@ -285,7 +283,6 @@ public class VideoSelectionActivity2 extends Activity{
 				
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					videosec = "10s";
 					ten_s_ibtn.setImageResource(R.drawable.ten_s_selected);
 					thirty_s_ibtn.setImageResource(R.drawable.fifteen_s_unselect);
@@ -300,7 +297,6 @@ public class VideoSelectionActivity2 extends Activity{
 				
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					videosec = "15s";
 					ten_s_ibtn.setImageResource(R.drawable.ten_s_unselect);
 					thirty_s_ibtn.setImageResource(R.drawable.fifteen_s_select);
@@ -315,7 +311,7 @@ public class VideoSelectionActivity2 extends Activity{
 				
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
+
 					videosec = "30s";
 					ten_s_ibtn.setImageResource(R.drawable.ten_s_unselect);
 					thirty_s_ibtn.setImageResource(R.drawable.fifteen_s_unselect);
@@ -330,7 +326,7 @@ public class VideoSelectionActivity2 extends Activity{
 				
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
+
 					dialog.dismiss();
 				}
 			});
@@ -384,7 +380,7 @@ public class VideoSelectionActivity2 extends Activity{
 		
 		@Override
 		public View getView(int position, View arg1, ViewGroup arg2) {
-			// TODO Auto-generated method stub
+
 			ImageView imageView = new ImageView(VideoSelectionActivity2.this);
 			AbsListView.LayoutParams params = new AbsListView.LayoutParams(
 					(int) (screenWidth / 3.2), (int) (screenWidth / 3.2));
@@ -396,19 +392,19 @@ public class VideoSelectionActivity2 extends Activity{
 		
 		@Override
 		public long getItemId(int arg0) {
-			// TODO Auto-generated method stub
+
 			return 0;
 		}
 		
 		@Override
 		public Object getItem(int arg0) {
-			// TODO Auto-generated method stub
+
 			return null;
 		}
 		
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
+
 			return gv_pics.length;
 		}
 	};
@@ -418,7 +414,7 @@ public class VideoSelectionActivity2 extends Activity{
 		super.onActivityResult(requestCode, resultCode, data);
 
 		String picPath = null;
-		
+
 		if (requestCode == SystemValue.GET_PICTURE) {
 			if(data!=null){
 				Uri uri = data.getData();

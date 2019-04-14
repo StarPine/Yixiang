@@ -68,7 +68,7 @@ public class MyCamPara {
 	public  class CameraSizeComparator implements Comparator<Size>{
 		//按升序排列
 		public int compare(Size lhs, Size rhs) {
-			// TODO Auto-generated method stub
+
 			if(lhs.width == rhs.width){
 			return 0;
 			}

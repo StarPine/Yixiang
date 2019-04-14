@@ -90,7 +90,7 @@ public class VideoUpload {
 
 					@Override
 					public void onResponse(String response) {
-						// TODO Auto-generated method stub
+
 						Log.d("drawings_response", response);
 
 						try {
@@ -111,7 +111,7 @@ public class VideoUpload {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						// TODO Auto-generated method stub
+
 						
 					}
 				});

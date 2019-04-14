@@ -3,6 +3,8 @@ package com.example.mydrawing.second;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,9 +12,11 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.graphics.PixelFormat;
+import android.graphics.PointF;
+import android.graphics.Rect;
 import android.hardware.Camera;
-import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
@@ -26,11 +30,13 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,9 +46,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.mydrawing.DrawingActivity;
 import com.example.mydrawing.R;
 import com.liimou.artdrawing.ArtDrawingLib;
 import com.liimou.artdrawing.DetectEdges;
@@ -68,8 +72,6 @@ import util.ImageUtil;
 import util.SelectPhotoUtil;
 import util.SystemValue;
 import util.VerticalSeekBar;
-import util.VideoCapture;
-import util.WaterMark;
 
 public class VideoActivity_se extends Activity implements Callback,
         PictureCallback {
@@ -159,14 +161,14 @@ public class VideoActivity_se extends Activity implements Callback,
                                         @Override
                                         public void onClick(DialogInterface arg0,
                                                             int arg1) {
-                                            // TODO Auto-generated method stub
+
                                             editor.putString("state", "finished");
                                             editor.apply();
                                             finish();
                                         }
                                     }).create().show();
                     break;
-                case MSG_SAVE_SUCCESS:
+                case MSG_SAVE_SUCCESS://视频保存成功
                     if (msg.obj != null) {
                         isVideo = true;
                         savePath = (String) msg.obj;
@@ -276,8 +278,8 @@ public class VideoActivity_se extends Activity implements Callback,
     SurfaceView sView;
     SurfaceHolder surfaceHolder;
     Camera camera;
-    ImageView cameraPreView = null, refImageView = null;
-
+    ImageView cameraPreView = null;
+    ImageView refImageView = null;
     long endofmp4 = 0;
 
     int total_frame_size = 0, frame_index_removed = 1;
@@ -298,8 +300,21 @@ public class VideoActivity_se extends Activity implements Callback,
     Bitmap originBitmap;
     SharedPreferences.Editor editor;
     SharedPreferences sharedPreferences;
-
     Bitmap watermark;
+    private static final int NONE = 0;
+    private static final int DRAG = 1;
+    private static final int ZOOM = 2;
+    private int mode = NONE;
+
+    private Matrix matrix = new Matrix();
+    private Matrix savedMatrix = new Matrix();
+    // 第一个按下的手指的点
+    private PointF startPoint = new PointF();
+    // 两个按下的手指的触摸点的中点
+    private PointF midPoint = new PointF();
+    // 初始的两个手指按下的触摸点的距离
+    private float oriDis = 1f;
+    private String saveMp4Path;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -313,6 +328,7 @@ public class VideoActivity_se extends Activity implements Callback,
         display.getMetrics(dm);
         screenWidth = dm.widthPixels; // 屏幕宽（像素，如：480px）
         screenHeight = dm.heightPixels; // 屏幕高（像素，如：800p）
+
 
         int scale = (int) (screenWidth * 1.0f / previewSizeWidth);
         scale = -1;
@@ -329,16 +345,16 @@ public class VideoActivity_se extends Activity implements Callback,
 
 
         String videosec = getIntent().getExtras().getString("record_sec");
-        if (videosec.equals("60s")) {
-            max_frame_num = 1200;
-        } else if (videosec.equals("30s")) {
+        if (videosec.equals("30s")) {
             max_frame_num = 600;
+        } else if (videosec.equals("15s")) {
+            max_frame_num = 300;
         }
 
         inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         initView();
-
+        setDrag();
         tempFilePath = SystemValue.tempFilePath;
         localVideoPath = SystemValue.localVideoPath;
         localImagePath = SystemValue.localImagePath;
@@ -374,7 +390,7 @@ public class VideoActivity_se extends Activity implements Callback,
 
             @Override
             public void run() {
-                // TODO Auto-generated method stub
+
                 mHandler.sendEmptyMessage(RECORD_TIME);
             }
         };
@@ -410,6 +426,94 @@ public class VideoActivity_se extends Activity implements Callback,
         photoUri = Uri.fromFile(new File(pic_take_path));
     }
 
+    public void setDrag(){
+        refImageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return true;
+            }
+        });
+
+        refImageView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                ImageView view = (ImageView) v;
+                final int x = (int) event.getRawX();
+                final int y = (int) event.getRawY();
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_DOWN:
+                        //单点触控
+                        matrix.set(view.getImageMatrix());
+                        savedMatrix.set(matrix);
+                        startPoint.set(event.getX(), event.getY());
+                        mode = DRAG;
+                        break;
+                    case MotionEvent.ACTION_POINTER_DOWN:
+                        //多点触控
+                        oriDis = distance(event);
+                        if (oriDis > 10f) {
+                            savedMatrix.set(matrix);
+                            midPoint = midPoint(event);
+                            mode = ZOOM;
+                        }
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        // 手指滑动事件
+                        if (mode == DRAG) {
+                            // 是一个手指拖动
+                            matrix.set(savedMatrix);
+                            matrix.postTranslate(event.getX() - startPoint.x, event.getY()
+                                    - startPoint.y);
+                        } else if (mode == ZOOM) {
+                            // 两个手指滑动
+                            float newDist = distance(event);
+                            if (newDist > 10f) {
+                                matrix.set(savedMatrix);
+                                float scale = newDist / oriDis;
+                                matrix.postScale(scale, scale, midPoint.x, midPoint.y);
+                            }
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_POINTER_UP:
+                        // 手指放开事件
+                        mode = NONE;
+                        break;
+                }
+                view.setImageMatrix(matrix);
+                return true;
+            }
+        });
+    }
+
+    /**
+     * 计算两个手指头之间的中心点的位置
+     * x = (x1+x2)/2;
+     * y = (y1+y2)/2;
+     *
+     * @param event 触摸事件
+     * @return 返回中心点的坐标
+     */
+    private PointF midPoint(MotionEvent event) {
+        float x = (event.getX(0) + event.getX(1)) / 2;
+        float y = (event.getY(0) + event.getY(1)) / 2;
+        return new PointF(x, y);
+    }
+
+
+    /**
+     * 计算两个手指间的距离
+     *
+     * @param event 触摸事件
+     * @return 放回两个手指之间的距离
+     */
+    private float distance(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);//两点间距离公式
+    }
+
     void preVideoDeal() {
         editor.putString("videoUrl", "");
         String status = getIntent().getExtras().getString("preVideo");
@@ -428,9 +532,9 @@ public class VideoActivity_se extends Activity implements Callback,
             } else {
                 isPause = false;
                 editor.putString("state", "recording");
-                if (max_frame_num == 600) {
+                if (max_frame_num == 300) {
                     editor.putString("videosec", "15s");
-                } else if (max_frame_num == 1200) {
+                } else if (max_frame_num == 600) {
                     editor.putString("videosec", "30s");
                 } else if (max_frame_num == 200) {
                     editor.putString("videosec", "10s");
@@ -449,9 +553,9 @@ public class VideoActivity_se extends Activity implements Callback,
         } else {
             isPause = false;
             editor.putString("state", "recording");
-            if (max_frame_num == 600) {
+            if (max_frame_num == 300) {
                 editor.putString("videosec", "15s");
-            } else if (max_frame_num == 1200) {
+            } else if (max_frame_num == 600) {
                 editor.putString("videosec", "30s");
             }
             editor.putString("ref_state", state);
@@ -538,6 +642,7 @@ public class VideoActivity_se extends Activity implements Callback,
         finish_ibtn.setVisibility(View.INVISIBLE);
 
         pause.setVisibility(View.VISIBLE);
+        back_ibtn.setVisibility(View.VISIBLE);
         pause.setImageResource(R.drawable.pause_icon);
 
 
@@ -551,7 +656,7 @@ public class VideoActivity_se extends Activity implements Callback,
 
             @Override
             public void onClick(View arg0) {
-                // TODO Auto-generated method stub
+
                 isRunning = true;
                 isPause = false;
                 isReciprocal = false;
@@ -559,6 +664,7 @@ public class VideoActivity_se extends Activity implements Callback,
                 flexibleLayout.setVisibility(View.GONE);
 
                 pause.setVisibility(View.VISIBLE);
+                back_ibtn.setVisibility(View.VISIBLE);
                 reciprocal_rl.setVisibility(View.GONE);
                 reciprocal_index = 0;
                 reciprocal_iv.setImageBitmap(null);
@@ -569,7 +675,7 @@ public class VideoActivity_se extends Activity implements Callback,
 
             @Override
             public void onClick(View arg0) {
-                // TODO Auto-generated method stub
+
                 finishVideo();
             }
         });
@@ -579,7 +685,7 @@ public class VideoActivity_se extends Activity implements Callback,
             @SuppressLint("NewApi")
             @Override
             public void onClick(View arg0) {
-                // TODO Auto-generated method stub
+
                 setToolAlpha(1f);
                 mHandler.postDelayed(toolAlphaRunnable, 2000);
                 new AlertDialog.Builder(VideoActivity_se.this,
@@ -592,7 +698,7 @@ public class VideoActivity_se extends Activity implements Callback,
                                     @Override
                                     public void onClick(DialogInterface arg0,
                                                         int arg1) {
-                                        // TODO Auto-generated method stub
+
                                         editor.putString("state", "finished");
                                         editor.apply();
                                         finish();
@@ -621,9 +727,10 @@ public class VideoActivity_se extends Activity implements Callback,
             public void onClick(View v) {
                 setToolAlpha(1f);
                 mHandler.postDelayed(toolAlphaRunnable, 2000);
-                // TODO Auto-generated method stub
+
                 isPause = true;
                 pause.setVisibility(View.GONE);
+                back_ibtn.setVisibility(View.GONE);
                 pause_rl.setVisibility(View.VISIBLE);
                 finish_ibtn.setVisibility(View.INVISIBLE);
             }
@@ -633,11 +740,12 @@ public class VideoActivity_se extends Activity implements Callback,
 
             @Override
             public void onClick(View arg0) {
-                // TODO Auto-generated method stub
+
                 setToolAlpha(1f);
                 mHandler.postDelayed(toolAlphaRunnable, 2000);
                 isPause = false;
                 pause.setVisibility(View.VISIBLE);
+                back_ibtn.setVisibility(View.VISIBLE);
                 pause_rl.setVisibility(View.GONE);
                 finish_ibtn.setVisibility(View.VISIBLE);
 
@@ -649,7 +757,7 @@ public class VideoActivity_se extends Activity implements Callback,
 
             @Override
             public void onClick(View arg0) {
-                // TODO Auto-generated method stub
+
 
                 setToolAlpha(1f);
                 mHandler.postDelayed(toolAlphaRunnable, 2000);
@@ -718,7 +826,7 @@ public class VideoActivity_se extends Activity implements Callback,
 
             @Override
             public void onClick(View arg0) {
-                // TODO Auto-generated method stub
+
                 setToolAlpha(1f);
                 mHandler.postDelayed(toolAlphaRunnable, 2000);
             }
@@ -733,11 +841,10 @@ public class VideoActivity_se extends Activity implements Callback,
         reciprocal_rl.setVisibility(View.GONE);
         isRunning = false;
         imgsToMp4();
-        isImage = false;
         mHandler.sendEmptyMessage(JUDGE_FINISH);
     }
 
-//    用仿射保存位图
+    //    用仿射保存位图
     void toSaveBitmapWithAffine(final byte[] data) {
 
         if (data != null) {
@@ -747,9 +854,7 @@ public class VideoActivity_se extends Activity implements Callback,
                 File file = new FileUtils().createFileInSDCard("videoTemp_"
                         + index + IMAGE_TYPE, tempFilePath);
                 os = new FileOutputStream(file);
-//				Bitmap waterBitmap = WaterMark.createBitmap(bitmap, VideoActivity.this);
-                Bitmap waterBitmap = WaterMark.createWaterMaskBitmap(bitmap, watermark);
-                waterBitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);//不创建水印图
 
                 os.flush();
                 os.close();
@@ -803,7 +908,7 @@ public class VideoActivity_se extends Activity implements Callback,
 
                 editor.putString("state", "convertion");
                 editor.apply();
-                VideoCapture.genMp4(tempFilePath, saved_frame_indexs, 20,
+                saveMp4Path = VideoCapture_se.genMp4(tempFilePath, saved_frame_indexs, 20,
                         mHandler, localVideoPath, VideoActivity_se.this);
             }
         }).start();
@@ -811,13 +916,13 @@ public class VideoActivity_se extends Activity implements Callback,
 
     @Override
     public void onPictureTaken(byte[] arg0, Camera arg1) {
-        // TODO Auto-generated method stub
+
 
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-        // TODO Auto-generated method stub
+
         if (isRunning) {
             final Camera.Parameters p = camera.getParameters();
             p.setPreviewSize(previewSizeWidth, previewSizeHeight);
@@ -834,7 +939,7 @@ public class VideoActivity_se extends Activity implements Callback,
 
                 @Override
                 public void onPreviewFrame(byte[] arg0, Camera arg1) {
-                    // TODO Auto-generated method stub
+
                     frameData = arg0;
                     // myHandler.post(DoImageProcessing);
                     if (isRunning) {
@@ -875,7 +980,7 @@ public class VideoActivity_se extends Activity implements Callback,
     @SuppressLint("NewApi")
     @Override
     public void surfaceCreated(SurfaceHolder arg0) {
-        // TODO Auto-generated method stub
+
         int cameraCount = Camera.getNumberOfCameras();
 
         for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
@@ -898,7 +1003,7 @@ public class VideoActivity_se extends Activity implements Callback,
 
     @Override
     public void surfaceDestroyed(SurfaceHolder arg0) {
-        // TODO Auto-generated method stub
+
         if (camera != null) {
             camera.setPreviewCallback(null);
             camera.stopPreview();
@@ -925,31 +1030,19 @@ public class VideoActivity_se extends Activity implements Callback,
     }
 
     private void judgeFinish() {
-        finish();
         if (isVideo) {
-
-//            String new_imgPath = ImageUtil.compressImage(VideoActivity_se.this, selectedImgPath, false);
-            DrawingInfo drawingInfo = SystemValue.curLocalDrawingInfo;
-////            drawingInfo.setDrawingImg(new_imgPath);
-//            dbOp.updateDrawingImgPath(Integer.parseInt(drawingInfo.getDrawingId()), new_imgPath);
-//            SystemValue.curLocalDrawingInfo = drawingInfo;
-
-//            Intent intent = new Intent(VideoActivity_se.this,
-//                    DrawingActivity.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putString("video_local_path", savePath);
-//            bundle.putString("img_path", selectedImgPath);
-//            bundle.putString("video_img_path", drawingInfo.getVideoCover());
-//            bundle.putBoolean("isUpload", false);
-//            intent.putExtras(bundle);
-//            startActivity(intent);
+            //是否添加到相册
+            ContentResolver localContentResolver = this.getContentResolver();
+            File file = new File(saveMp4Path);
+            ContentValues localContentValues = FileUtils.getVideoContentValues(this, file, System.currentTimeMillis());
+            Uri localUri = localContentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, localContentValues);
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, localUri));
+            Intent intentRe = new Intent();
+            setResult(606, intentRe);
             finish();
-        } else if (!isImage) {
-            flexibleLayout.removeAllViews();
         } else if (!isVideo) {
             flexibleLayout.removeAllViews();
             flexibleLayout.addView(videoGenLayout);
-
         }
 
     }
@@ -1011,7 +1104,7 @@ public class VideoActivity_se extends Activity implements Callback,
 
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        // TODO Auto-generated method stub
+
                         editor.putString("state", "finished");
                         editor.apply();
                         finish();

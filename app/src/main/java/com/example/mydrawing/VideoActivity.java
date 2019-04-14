@@ -22,6 +22,7 @@ import util.VerticalSeekBar;
 import util.VideoCapture;
 import util.WaterMark;
 
+import com.example.mydrawing.second.VideoCapture_se;
 import com.liimou.artdrawing.ArtDrawingLib;
 import com.liimou.artdrawing.DetectEdges;
 
@@ -169,7 +170,7 @@ public class VideoActivity extends Activity implements Callback,
 							@Override
 							public void onClick(DialogInterface arg0,
 									int arg1) {
-								// TODO Auto-generated method stub
+
 								editor.putString("state", "finished");
 								editor.apply();
 								finish();
@@ -413,7 +414,7 @@ public class VideoActivity extends Activity implements Callback,
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+
 				mHandler.sendEmptyMessage(RECORD_TIME);
 			}
 		};
@@ -606,7 +607,7 @@ public class VideoActivity extends Activity implements Callback,
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				isRunning = true;
 				isPause = false;
 				isReciprocal = false;
@@ -624,7 +625,7 @@ public class VideoActivity extends Activity implements Callback,
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				finishVideo();
 			}
 		});
@@ -634,7 +635,7 @@ public class VideoActivity extends Activity implements Callback,
 			@SuppressLint("NewApi")
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				setToolAlpha(1f);
 				mHandler.postDelayed(toolAlphaRunnable, 2000);
 				new AlertDialog.Builder(VideoActivity.this,
@@ -647,7 +648,7 @@ public class VideoActivity extends Activity implements Callback,
 									@Override
 									public void onClick(DialogInterface arg0,
 											int arg1) {
-										// TODO Auto-generated method stub
+
 										editor.putString("state", "finished");
 										editor.apply();
 										finish();
@@ -676,7 +677,7 @@ public class VideoActivity extends Activity implements Callback,
 			public void onClick(View v) {
 				setToolAlpha(1f);
 				mHandler.postDelayed(toolAlphaRunnable, 2000);
-				// TODO Auto-generated method stub
+
 				isPause = true;
 				pause.setVisibility(View.GONE);
 				pause_rl.setVisibility(View.VISIBLE);
@@ -688,7 +689,7 @@ public class VideoActivity extends Activity implements Callback,
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				setToolAlpha(1f);
 				mHandler.postDelayed(toolAlphaRunnable, 2000);
 				isPause = false;
@@ -703,7 +704,7 @@ public class VideoActivity extends Activity implements Callback,
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 //				ContentValues values = new ContentValues();
 //				photoUri = VideoActivity.this.getContentResolver().insert(
 //						MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
@@ -726,7 +727,7 @@ public class VideoActivity extends Activity implements Callback,
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 
 				setToolAlpha(1f);
 				mHandler.postDelayed(toolAlphaRunnable, 2000);
@@ -737,19 +738,19 @@ public class VideoActivity extends Activity implements Callback,
 			
 			@Override
 			public void onStopTrackingTouch(SeekBar arg0) {
-				// TODO Auto-generated method stub
+
 				
 			}
 			
 			@Override
 			public void onStartTrackingTouch(SeekBar arg0) {
-				// TODO Auto-generated method stub
+
 				
 			}
 			
 			@Override
 			public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
-				// TODO Auto-generated method stub
+
 				float alpha = 0;
 				if(state.equals("s_ref")){
 					if(progress<=100){
@@ -783,19 +784,19 @@ public class VideoActivity extends Activity implements Callback,
 			
 			@Override
 			public void onStopTrackingTouch(SeekBar arg0) {
-				// TODO Auto-generated method stub
+
 				
 			}
 			
 			@Override
 			public void onStartTrackingTouch(SeekBar arg0) {
-				// TODO Auto-generated method stub
+
 				
 			}
 			
 			@Override
 			public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
-				// TODO Auto-generated method stub
+
 				detectEdges.changeCanny2(progress);
 				setToolAlpha(1f);
 				mHandler.postDelayed(toolAlphaRunnable, 2000);
@@ -806,7 +807,7 @@ public class VideoActivity extends Activity implements Callback,
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				setToolAlpha(1f);
 				mHandler.postDelayed(toolAlphaRunnable, 2000);
 			}
@@ -847,6 +848,7 @@ public class VideoActivity extends Activity implements Callback,
 						+ index + IMAGE_TYPE, tempFilePath);
 				os = new FileOutputStream(file);
 //				Bitmap waterBitmap = WaterMark.createBitmap(bitmap, VideoActivity.this);
+				//创建水印图
 				Bitmap waterBitmap = WaterMark.createWaterMaskBitmap(bitmap, watermark);
 				waterBitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
 
@@ -902,7 +904,7 @@ public class VideoActivity extends Activity implements Callback,
 
 				editor.putString("state", "convertion");
 				editor.apply();
-				VideoCapture.genMp4(tempFilePath, saved_frame_indexs, 20,
+				VideoCapture_se.genMp4(tempFilePath, saved_frame_indexs, 20,
 						mHandler,localVideoPath,VideoActivity.this);
 			}
 		}).start();
@@ -910,13 +912,13 @@ public class VideoActivity extends Activity implements Callback,
 
 	@Override
 	public void onPictureTaken(byte[] arg0, Camera arg1) {
-		// TODO Auto-generated method stub
+
 
 	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-		// TODO Auto-generated method stub
+
 		if (isRunning) {
 			final Camera.Parameters p = camera.getParameters();            
 			p.setPreviewSize(previewSizeWidth, previewSizeHeight);
@@ -933,7 +935,7 @@ public class VideoActivity extends Activity implements Callback,
 
 				@Override
 				public void onPreviewFrame(byte[] arg0, Camera arg1) {
-					// TODO Auto-generated method stub
+
 					frameData = arg0;
 					// myHandler.post(DoImageProcessing);
 					if(isRunning){
@@ -974,7 +976,7 @@ public class VideoActivity extends Activity implements Callback,
 
 		@Override
 		public void onAutoFocus(boolean arg0, Camera arg1) {
-			// TODO Auto-generated method stub
+
 
 		}
 	};
@@ -982,7 +984,7 @@ public class VideoActivity extends Activity implements Callback,
 	@SuppressLint("NewApi")
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
-		// TODO Auto-generated method stub
+
 		int cameraCount = Camera.getNumberOfCameras();
 
 		for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
@@ -1005,7 +1007,7 @@ public class VideoActivity extends Activity implements Callback,
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
-		// TODO Auto-generated method stub
+
 		if (camera != null) {
 			camera.setPreviewCallback(null);
 			camera.stopPreview();
@@ -1161,7 +1163,7 @@ public class VideoActivity extends Activity implements Callback,
 
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						// TODO Auto-generated method stub
+
 						editor.putString("state", "finished");
 						editor.apply();
 						finish();
@@ -1181,7 +1183,7 @@ public class VideoActivity extends Activity implements Callback,
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
+
 			setToolAlpha(0.2f);
 		}
 	};

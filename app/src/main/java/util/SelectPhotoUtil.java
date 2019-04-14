@@ -35,7 +35,7 @@ public class SelectPhotoUtil {
 					@Override
 					public void onClick(
 							DialogInterface arg0, int arg1) {
-						// TODO Auto-generated method stub
+
 						takePic(photoUri);
 					}
 				})
@@ -45,7 +45,7 @@ public class SelectPhotoUtil {
 					@Override
 					public void onClick(
 							DialogInterface arg0, int arg1) {
-						// TODO Auto-generated method stub
+
 						getPic();
 					}
 				}).create().show();

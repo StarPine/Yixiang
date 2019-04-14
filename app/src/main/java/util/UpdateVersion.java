@@ -82,7 +82,7 @@ public class UpdateVersion {
 
 					@Override
 					public void onResponse(String response) {
-						// TODO Auto-generated method stub
+
 						Log.d("getLatestVersion_response", response);
 
 						try {
@@ -124,7 +124,7 @@ public class UpdateVersion {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						// TODO Auto-generated method stub
+
 						
 						
 					}
@@ -177,7 +177,7 @@ public class UpdateVersion {
 								
 								@Override
 								public void run() {
-									// TODO Auto-generated method stub
+
 									Message message = new Message();
 									message.what = download_finished;
 									mHandler.sendMessage(message);
@@ -223,7 +223,7 @@ public class UpdateVersion {
 
 					@Override
 					public void onResponse(String response) {
-						// TODO Auto-generated method stub
+
 						Log.d("getLatestVersion_response", response);
 
 						try {
@@ -265,7 +265,7 @@ public class UpdateVersion {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						// TODO Auto-generated method stub
+
 						message.what = get_advertise;
 						mHandler.sendMessage(message);
 						

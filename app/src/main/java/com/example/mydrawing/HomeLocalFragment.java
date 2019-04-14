@@ -182,7 +182,7 @@ public class HomeLocalFragment extends Fragment{
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+
 				pic_show_rl.setVisibility(View.GONE);
 			}
 		});
@@ -190,7 +190,7 @@ public class HomeLocalFragment extends Fragment{
 //			
 //			@Override
 //			public void onSingleTap() {
-//				// TODO Auto-generated method stub
+//
 //				pic_show_rl.setVisibility(View.GONE);
 ////				pic_show_iv.setScaleType(ScaleType.FIT_CENTER);
 //			}
@@ -202,7 +202,7 @@ public class HomeLocalFragment extends Fragment{
 
 	@Override
 	public void onHiddenChanged(boolean hidden) {
-		// TODO Auto-generated method stub
+
 		Toast.makeText(getActivity(), "localhidden:"+hidden, Toast.LENGTH_SHORT).show();
 		if(!hidden&&SystemValue.per_fragment_index!=SystemValue.cur_fragment_index){
 			getAction();
@@ -234,7 +234,7 @@ public class HomeLocalFragment extends Fragment{
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
+
 			if(list.size()==0){
 				no_data_rl.setVisibility(View.VISIBLE);
 			}
@@ -246,19 +246,19 @@ public class HomeLocalFragment extends Fragment{
 
 		@Override
 		public Object getItem(int arg0) {
-			// TODO Auto-generated method stub
+
 			return null;
 		}
 
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
+
 			return position;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup arg2) {
-			// TODO Auto-generated method stub
+
 
 			final DrawingInfo drawingInfo = list.get(position);
 
@@ -335,7 +335,7 @@ public class HomeLocalFragment extends Fragment{
 
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+
 					// 分享
 					cur_drawing_to_change_index = p;
 					SystemValue.curLocalDrawingInfo = drawingInfo;
@@ -357,7 +357,7 @@ public class HomeLocalFragment extends Fragment{
 
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+
 					SystemValue.per_fragment_index = SystemValue.cur_fragment_index;
 					Intent intent = new Intent(Intent.ACTION_VIEW);
 			        String type = "video/mp4";
@@ -371,7 +371,7 @@ public class HomeLocalFragment extends Fragment{
 				
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+
 					pic_show_rl.setVisibility(View.VISIBLE);
 					Bitmap bitmap = SystemValue.lessenUriImage(drawingInfo.getDrawingImg(), windowWidth, windowWidth/3*4);
 					pic_show_iv.setImageBitmap(bitmap);
@@ -383,7 +383,7 @@ public class HomeLocalFragment extends Fragment{
 
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+
 					cur_img_to_change_iv = img_iv;
 					cur_drawing_to_change_index = p;
 
@@ -398,7 +398,7 @@ public class HomeLocalFragment extends Fragment{
 
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+
 					new AlertDialog.Builder(getActivity(),AlertDialog.THEME_HOLO_DARK)
 					.setTitle("删除作品")
 					.setMessage("确定删除该作品，删除后不可恢复！")
@@ -418,7 +418,7 @@ public class HomeLocalFragment extends Fragment{
 
 				@Override
 				public void onClick(View arg0) {
-//					// TODO Auto-generated method stub
+//
 					RelativeLayout ll = new RelativeLayout(getActivity());
 					final EditText et = new EditText(getActivity());
 					ImageView iView = new ImageView(getActivity());
@@ -497,7 +497,7 @@ public class HomeLocalFragment extends Fragment{
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+
 				videoUpload.getAssign();		
 
 				List<DrawingInfo> temps = dbOp.queryDrawings();
