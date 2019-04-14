@@ -21,12 +21,12 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY" />
 
-        <ImageView
-            android:id="@+id/ref_img_iv"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:background="@null"
-            android:scaleType="centerInside" />
+        <!--<ImageView-->
+            <!--android:id="@+id/ref_img_iv"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@null"-->
+            <!--android:scaleType="centerInside" />-->
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -60,6 +60,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
+        <ImageView
+            android:id="@+id/ref_img_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@null"
+            android:scaleType="matrix" />
         <util.VerticalSeekBar
             android:id="@+id/vseekbar_left"
             style="@style/Widget.SeekBar.Transparency"

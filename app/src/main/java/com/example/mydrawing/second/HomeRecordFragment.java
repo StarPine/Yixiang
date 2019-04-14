@@ -193,8 +193,6 @@ public class HomeRecordFragment extends Fragment {
             // 显示控件
             RelativeLayout show_rl = (RelativeLayout) convertView
                     .findViewById(R.id.show_rl);
-            TextView content_tv = (TextView) convertView
-                    .findViewById(R.id.content_tv);
             TextView date_tv = (TextView) convertView
                     .findViewById(R.id.date_tv);
             ImageView video_iv = (ImageView) convertView
@@ -231,7 +229,6 @@ public class HomeRecordFragment extends Fragment {
             if (content == null || content.equals("") || content.equals("null")) {
                 content = SystemValue.default_drawing_content;
             }
-            content_tv.setText(content);
 
             Bitmap bitmapvid = SystemValue.lessenUriImage(drawingInfo.getVideoCover(), windowWidth / 2, windowWidth / 2 / 3 * 4);
             video_iv.setImageBitmap(bitmapvid);

@@ -279,7 +279,7 @@ public class VideoActivity_se extends Activity implements Callback,
     SurfaceHolder surfaceHolder;
     Camera camera;
     ImageView cameraPreView = null;
-    ImageView refImageView = null;
+    ImageView refImageView;
     long endofmp4 = 0;
 
     int total_frame_size = 0, frame_index_removed = 1;
@@ -354,7 +354,6 @@ public class VideoActivity_se extends Activity implements Callback,
         inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         initView();
-        setDrag();
         tempFilePath = SystemValue.tempFilePath;
         localVideoPath = SystemValue.localVideoPath;
         localImagePath = SystemValue.localImagePath;
@@ -426,93 +425,6 @@ public class VideoActivity_se extends Activity implements Callback,
         photoUri = Uri.fromFile(new File(pic_take_path));
     }
 
-    public void setDrag(){
-        refImageView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
-
-        refImageView.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                ImageView view = (ImageView) v;
-                final int x = (int) event.getRawX();
-                final int y = (int) event.getRawY();
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_DOWN:
-                        //单点触控
-                        matrix.set(view.getImageMatrix());
-                        savedMatrix.set(matrix);
-                        startPoint.set(event.getX(), event.getY());
-                        mode = DRAG;
-                        break;
-                    case MotionEvent.ACTION_POINTER_DOWN:
-                        //多点触控
-                        oriDis = distance(event);
-                        if (oriDis > 10f) {
-                            savedMatrix.set(matrix);
-                            midPoint = midPoint(event);
-                            mode = ZOOM;
-                        }
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        // 手指滑动事件
-                        if (mode == DRAG) {
-                            // 是一个手指拖动
-                            matrix.set(savedMatrix);
-                            matrix.postTranslate(event.getX() - startPoint.x, event.getY()
-                                    - startPoint.y);
-                        } else if (mode == ZOOM) {
-                            // 两个手指滑动
-                            float newDist = distance(event);
-                            if (newDist > 10f) {
-                                matrix.set(savedMatrix);
-                                float scale = newDist / oriDis;
-                                matrix.postScale(scale, scale, midPoint.x, midPoint.y);
-                            }
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_POINTER_UP:
-                        // 手指放开事件
-                        mode = NONE;
-                        break;
-                }
-                view.setImageMatrix(matrix);
-                return true;
-            }
-        });
-    }
-
-    /**
-     * 计算两个手指头之间的中心点的位置
-     * x = (x1+x2)/2;
-     * y = (y1+y2)/2;
-     *
-     * @param event 触摸事件
-     * @return 返回中心点的坐标
-     */
-    private PointF midPoint(MotionEvent event) {
-        float x = (event.getX(0) + event.getX(1)) / 2;
-        float y = (event.getY(0) + event.getY(1)) / 2;
-        return new PointF(x, y);
-    }
-
-
-    /**
-     * 计算两个手指间的距离
-     *
-     * @param event 触摸事件
-     * @return 放回两个手指之间的距离
-     */
-    private float distance(MotionEvent event) {
-        float x = event.getX(0) - event.getX(1);
-        float y = event.getY(0) - event.getY(1);
-        return (float) Math.sqrt(x * x + y * y);//两点间距离公式
-    }
 
     void preVideoDeal() {
         editor.putString("videoUrl", "");
@@ -521,6 +433,7 @@ public class VideoActivity_se extends Activity implements Callback,
             if (status.equals("recording")) {
                 isPause = true;
                 pause.setVisibility(View.GONE);
+                back_ibtn.setVisibility(View.GONE);
                 pause_rl.setVisibility(View.VISIBLE);
                 finish_ibtn.setVisibility(View.INVISIBLE);
                 recoverData();
@@ -645,7 +558,7 @@ public class VideoActivity_se extends Activity implements Callback,
         back_ibtn.setVisibility(View.VISIBLE);
         pause.setImageResource(R.drawable.pause_icon);
 
-
+        refImageView.setOnTouchListener(new TouchListener());
         setOnclickListener();
 
     }
@@ -718,6 +631,7 @@ public class VideoActivity_se extends Activity implements Callback,
                 isPause = false;
                 pause_rl.setVisibility(View.GONE);
                 pause.setVisibility(View.GONE);
+                back_ibtn.setVisibility(View.GONE);
                 reciprocal_rl.setVisibility(View.VISIBLE);
 
             }
@@ -757,8 +671,6 @@ public class VideoActivity_se extends Activity implements Callback,
 
             @Override
             public void onClick(View arg0) {
-
-
                 setToolAlpha(1f);
                 mHandler.postDelayed(toolAlphaRunnable, 2000);
             }
@@ -1135,6 +1047,86 @@ public class VideoActivity_se extends Activity implements Callback,
         back_ibtn.setAlpha(alpha);
         pause.setAlpha(alpha);
 //		seekbar_rl.setAlpha(alpha);
+    }
+
+    private final class TouchListener implements View.OnTouchListener {
+        private PointF startPoint= new PointF();//PointF(浮点对)
+        private Matrix matrix=new Matrix();//矩阵对象
+        private Matrix currentMatrix=new Matrix();//存放照片当前的矩阵
+        private int mode=0;//确定是放大还是缩小
+        private static final int DRAG=1;//拖拉模式
+        private static final int ZOOM=2;//缩放模式
+        private float startDis;//开始距离
+        private PointF midPoint;//中心点
+
+
+        //参数1:用户触摸的控件；参数2:用户触摸所产生的事件
+        public boolean onTouch(View v, MotionEvent event) {
+            //判断事件的类型
+            //得到低八位才能获取动作，所以要屏蔽高八位(通过与运算&255)
+            //ACTION_MASK就是一个常量，代表255
+            switch (event.getAction()&MotionEvent.ACTION_MASK) {
+                case MotionEvent.ACTION_DOWN://手指下压
+                    mode=DRAG;
+                    currentMatrix.set(refImageView.getImageMatrix());//记录ImageView当前的移动位置
+                    startPoint.set(event.getX(), event.getY());
+                    break;
+                case MotionEvent.ACTION_MOVE://手指在屏幕移动，改事件会不断被调用
+                    if(mode==DRAG){//拖拉模式
+                        float dx=event.getX()-startPoint.x;//得到在x轴的移动距离
+                        float dy=event.getY()-startPoint.y;//得到在y轴的移动距离
+                        matrix.set(currentMatrix);//在没有进行移动之前的位置基础上进行移动
+                        //实现位置的移动
+                        matrix.postTranslate(dx, dy);
+                    }else if(mode==ZOOM){//缩放模式
+                        float endDis=distance(event);//结束距离
+                        if(endDis>10f){//防止不规则手指触碰
+                            //结束距离除以开始距离得到缩放倍数
+                            float scale=endDis/startDis;
+                            //通过矩阵实现缩放
+                            //参数：1.2.指定在xy轴的放大倍数;3,4以哪个参考点进行缩放
+                            //开始的参考点以两个触摸点的中心为准
+                            matrix.set(currentMatrix);//在没有进行缩放之前的基础上进行缩放
+                            matrix.postScale(scale,scale,midPoint.x,midPoint.y);
+                        }
+
+                    }
+
+                    break;
+                case MotionEvent.ACTION_UP://手指离开屏幕
+                case MotionEvent.ACTION_POINTER_UP://当屏幕上已经有手指离开屏幕，屏幕上还有一个手指，就会触发这个事件
+                    mode=0;
+                    break;
+                case MotionEvent.ACTION_POINTER_DOWN://当屏幕上已经有触点(手指)，再有一个手指按下屏幕，就会触发这个事件
+                    mode=ZOOM;
+                    startDis=distance(event);
+                    if(startDis>10f){//防止不规则手指触碰
+                        midPoint=mid(event);
+                        currentMatrix.set(refImageView.getImageMatrix());//记录ImageView当前的缩放倍数
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+            //将imageView的矩阵位置改变
+            refImageView.setImageMatrix(matrix);
+            return true;
+        }
+
+    }
+    //计算两点之间的距离(勾股定理)
+    public float distance(MotionEvent event) {
+        float dx=event.getX(1)-event.getX(0);
+        float dy=event.getY(1)-event.getY(0);
+        return (float) Math.sqrt(dx*dx+dy*dy);
+    }
+
+    //计算两个点的中心点
+    public static PointF mid(MotionEvent event){
+        float midx=(event.getX(1)+event.getX(0))/2;
+        float midy=(event.getY(1)+event.getY(0))/2;
+        return new PointF(midx,midy);
     }
 
 }

@@ -50,14 +50,6 @@
                             android:text="20161122"
                             android:textColor="#ffffff"
                             android:textSize="@dimen/content" />
-
-                        <TextView
-                            android:id="@+id/content_tv"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="content"
-                            android:textColor="#ffffff"
-                            android:textSize="@dimen/content" />
                     </RelativeLayout>
                 </RelativeLayout>
 
