@@ -155,9 +155,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="10dp"
             android:background="@null"
             android:scaleType="centerInside"
-            android:src="@drawable/continue_record_icon" />
+            android:src="@drawable/click_oncome" />
     </RelativeLayout>
 
     <RelativeLayout

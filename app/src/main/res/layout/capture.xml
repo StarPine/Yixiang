@@ -38,19 +38,36 @@
             android:text="扫一扫"/>
         
     </RelativeLayout>
-    <TextView
-        android:id="@+id/code_message"
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textColor="@color/series_not_end"
-        android:textSize="20sp"
-        android:gravity="center"
+        android:layout_height="160dp"
         android:layout_gravity="bottom"
-        android:paddingBottom="100dp"
-        android:text="此激活码无效"
-        android:visibility="gone"
-        />
+        >
+
+        <TextView
+            android:id="@+id/code_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/series_not_end"
+            android:textSize="20sp"
+            android:layout_below="@+id/getweb"
+            android:text="此激活码无效"
+            android:visibility="gone"
+            />
+
+        <ImageButton
+            android:id="@+id/getweb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/getph"
+            android:background="@null"
+            android:paddingBottom="10dp"
+            android:layout_centerHorizontal="true"
+            />
+    </RelativeLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

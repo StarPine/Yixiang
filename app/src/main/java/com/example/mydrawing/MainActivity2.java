@@ -79,6 +79,7 @@ public class MainActivity2 extends FragmentActivity {
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.content, homeRecordFragment);
+        fragmentTransaction.hide(homeRecordFragment);
         fragmentTransaction.add(R.id.content, homeCreationFragment);
         fragmentTransaction.commit();
     }

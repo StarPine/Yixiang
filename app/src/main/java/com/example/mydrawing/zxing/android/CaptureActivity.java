@@ -4,8 +4,10 @@ package com.example.mydrawing.zxing.android;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -67,6 +69,7 @@ public final class CaptureActivity extends Activity implements
 
     private ImageView iv_back_icon;
     private TextView code_message;
+    private ImageButton getweb;
     private SurfaceHolder surfaceHolder;
 
     public ViewfinderView getViewfinderView() {
@@ -103,6 +106,17 @@ public final class CaptureActivity extends Activity implements
 
         iv_back_icon = (ImageView) findViewById(R.id.iv_back_icon);
         code_message = (TextView) findViewById(R.id.code_message);
+        getweb = (ImageButton) findViewById(R.id.getweb);
+        getweb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = "http://www.mibooplay.com/%E8%89%BA%E4%BA%AB.html";
+                Intent intent = new Intent();
+                intent.setData(Uri.parse(url));//Url 就是你要打开的网址
+                intent.setAction(Intent.ACTION_VIEW);
+                startActivity(intent); //启动浏览器
+            }
+        });
         iv_back_icon.setOnClickListener(new View.OnClickListener() {
 
             @Override
