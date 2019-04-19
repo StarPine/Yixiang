@@ -28,7 +28,7 @@ public class VideoCapture_se {
 	private static String filename = null;
 	
 
-	public static final int MSG_SAVE_SUCCESS=100;
+	public static final int MSG_SAVE_SUCCESS =100;
 	public static final int MSG_STATE=101;
 	public static final int DATA_MISS = 106;
 	public static final int TEMP_DATA = 107;
@@ -65,15 +65,14 @@ public class VideoCapture_se {
 					int maxIndex = saved_frame_indexs.size();
 					File file = new File(tempFilePath
 							+ "videoTemp_"+saved_frame_indexs.get(index) + IMAGE_TYPE);
-					while(!file.exists()&&index < maxIndex){
+					while(!file.exists() && index < maxIndex){
 						index++;
 						file = new File(tempFilePath
 								+ "videoTemp_"+saved_frame_indexs.get(index) + IMAGE_TYPE);
 					}
 					if(!file.exists()){
 						handler.sendMessage(handler.obtainMessage(DATA_MISS, savePath));
-					}
-					else{
+					}else{
 						Bitmap testBitmap = getImageByPath(tempFilePath
 								+ "videoTemp_"+saved_frame_indexs.get(index) + IMAGE_TYPE);
 

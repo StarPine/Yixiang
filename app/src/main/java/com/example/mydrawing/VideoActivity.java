@@ -144,8 +144,7 @@ public class VideoActivity extends Activity implements Callback,
 
 	// Handler myHandler = new Handler(Looper.getMainLooper());
 
-	private float[] srcPts = new float[] { 485, 445, 485, 35, 145, 115, 145,
-			365 };
+	private float[] srcPts = new float[] { 485, 445, 485, 35, 145, 115, 145,365 };
 	private float[] dstPts = new float[] { 0, 0, 480, 0, 480, 640, 0, 640 };
 
 	public Handler mHandler = new Handler() {

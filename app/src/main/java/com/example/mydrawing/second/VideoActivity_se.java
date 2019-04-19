@@ -123,8 +123,10 @@ public class VideoActivity_se extends Activity implements Callback,
 
     private int[] pixels = null;
     private byte[] frameData = null;
-    private int previewSizeWidth = 640;
-    private int previewSizeHeight = 480;
+    private int previewSizeWidth = 1280;
+    private int previewSizeHeight = 720;
+//    private int previewSizeWidth = 640;
+//    private int previewSizeHeight = 480;
     private boolean bProcessing = false;
     private Bitmap bitmap = null;
 
@@ -134,10 +136,10 @@ public class VideoActivity_se extends Activity implements Callback,
     private boolean isReciprocal = false;
     int screenWidth, screenHeight;
 
-
-    private float[] srcPts = new float[]{485, 445, 485, 35, 145, 115, 145,
-            365};
-    private float[] dstPts = new float[]{0, 0, 480, 0, 480, 640, 0, 640};
+//    private float[] srcPts = new float[] { 485, 445, 485, 35, 145, 115, 145,365 };
+//    private float[] dstPts = new float[] { 0, 0, 480, 0, 480, 640, 0, 640 };
+    private float[] srcPts = new float[]{730, 710,730,40,260, 170, 260, 580  };
+    private float[] dstPts = new float[]{0, 0, 720, 0, 720, 1280, 0, 1280};
 
     public Handler mHandler = new Handler() {
 
@@ -379,7 +381,7 @@ public class VideoActivity_se extends Activity implements Callback,
 
         LayoutParams params = (LayoutParams) sView.getLayoutParams();
         params.width = screenWidth;
-        params.height = screenWidth / 3 * 4;
+        params.height = screenWidth / 5 * 7;
         surface_rl.setLayoutParams(params);
         seekbar_rl.setLayoutParams(params);
         last_pic_iv.setLayoutParams(params);
@@ -828,8 +830,6 @@ public class VideoActivity_se extends Activity implements Callback,
 
     @Override
     public void onPictureTaken(byte[] arg0, Camera arg1) {
-
-
     }
 
     @Override
@@ -837,13 +837,14 @@ public class VideoActivity_se extends Activity implements Callback,
 
         if (isRunning) {
             final Camera.Parameters p = camera.getParameters();
+            List<Size> pictureSizes = p.getSupportedPictureSizes();
+            List<Camera.Size> previewSizes  = p.getSupportedPreviewSizes();
             p.setPreviewSize(previewSizeWidth, previewSizeHeight);
             p.setPictureFormat(PixelFormat.JPEG); // Sets the image format for
             // picture 设定相片格式为JPEG，默认为NV21
             p.setPreviewFormat(ImageFormat.NV21); // Sets the image format
-
+            camera.setParameters(p);
             camera.setDisplayOrientation(90);
-
             camera.setPreviewCallback(new PreviewCallback() {
 
                 Size size = p.getPreviewSize();
@@ -869,15 +870,10 @@ public class VideoActivity_se extends Activity implements Callback,
                                 cur_rate++;
                                 index++;
                             }
-
                         }
                     }
-
-
                 }
-
             });
-            camera.setParameters(p);
             try {
                 camera.setPreviewDisplay(surfaceHolder);
             } catch (Exception E) {
@@ -910,7 +906,6 @@ public class VideoActivity_se extends Activity implements Callback,
         if (camera == null) {
             camera = Camera.open();
         }
-
     }
 
     @Override
@@ -922,7 +917,6 @@ public class VideoActivity_se extends Activity implements Callback,
             camera.release();
             camera = null;
         }
-
     }
 
     private void doImageProcessing() {
@@ -946,6 +940,7 @@ public class VideoActivity_se extends Activity implements Callback,
             //是否添加到相册
             ContentResolver localContentResolver = this.getContentResolver();
             File file = new File(saveMp4Path);
+//            Uri localUri = Uri.fromFile(file);
             ContentValues localContentValues = FileUtils.getVideoContentValues(this, file, System.currentTimeMillis());
             Uri localUri = localContentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, localContentValues);
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, localUri));
@@ -1005,7 +1000,6 @@ public class VideoActivity_se extends Activity implements Callback,
         }
 
     }
-
 
     @Override
     public void onBackPressed() {

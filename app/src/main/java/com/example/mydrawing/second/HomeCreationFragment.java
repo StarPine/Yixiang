@@ -224,15 +224,12 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
                                             }
 
                                             intent.putExtras(bundle);
-                                            startActivity(intent);
-                                            activity.finish();
-
+                                            startActivityForResult(intent,606);
                                         }else {
                                             Intent intent1 = new Intent(getContext(),VideoAndRecording.class);
                                             bundle.putString("videoUrl", videoUrl);
                                             intent1.putExtras(bundle);
-                                            startActivity(intent1);
-                                            activity.finish();
+                                            startActivityForResult(intent1,606);
                                         }
 
                                     }
@@ -278,15 +275,13 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
                                                 bundle.putInt("pic_index", position);
                                             }
                                             intent.putExtras(bundle);
-                                            startActivity(intent);
-                                            activity.finish();
+                                            startActivityForResult(intent,606);
                                         }
                                         else {
                                             Intent intent1 = new Intent(getContext(),VideoAndRecording.class);
                                             bundle.putString("videoUrl", videoUrl);
                                             intent1.putExtras(bundle);
-                                            startActivity(intent1);
-                                            activity.finish();
+                                            startActivityForResult(intent1,606);
                                         }
 
                                     }
