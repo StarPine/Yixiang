@@ -96,7 +96,7 @@ public class MainActivity extends FragmentActivity {
 	LayoutInflater inflater;
 	RelativeLayout videoGenLayout;
 	ProgressBar video_gen_pb;
-	TextView loading_tv;
+	ImageView loading_tv;
 	int back_times = 0;
 	int back_times1 = 0;
 	//测试加干辣椒两个加两个
@@ -294,8 +294,8 @@ public class MainActivity extends FragmentActivity {
 		video_gen_pb = (ProgressBar) videoGenLayout
 				.findViewById(R.id.video_gen_pb);
 		video_gen_pb.setProgress(0);
-		loading_tv = (TextView) videoGenLayout.findViewById(R.id.loading_tv);
-		loading_tv.setText("艺享新版本正在下载，请耐心等候...");
+		loading_tv = (ImageView) videoGenLayout.findViewById(R.id.loading_tv);
+//		loading_tv.setText("艺享新版本正在下载，请耐心等候...");
 		dowload_rl.removeAllViews();
 		dowload_rl.addView(videoGenLayout);
 		

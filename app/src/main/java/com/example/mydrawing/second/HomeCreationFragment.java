@@ -44,6 +44,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import util.FileUtils;
 import util.ImageUtil;
 import util.MacAddressUtil;
 import util.SelectPhotoUtil;
@@ -193,7 +194,6 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
         final String videosec = sharedPreferences.getString("videosec", "");
         final String ref_state = sharedPreferences.getString("ref_state", "");
         final String videoUrl = sharedPreferences.getString("videoUrl", "");
-
         if(state!=null&&!state.equals("")){
             if(state.equals("recording")) {
                 new AlertDialog.Builder(activity,
@@ -239,7 +239,7 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
                             @Override
                             public void onClick(DialogInterface arg0,
                                                 int arg1) {
-
+                                FileUtils.deleteDirectoryContent(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + SystemValue.tempFilePath);
                                 editor.putString("state", "finished");
                                 editor.apply();
                             }
@@ -291,7 +291,7 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
                             @Override
                             public void onClick(DialogInterface arg0,
                                                 int arg1) {
-
+                                FileUtils.deleteDirectoryContent(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + SystemValue.tempFilePath);
                                 editor.putString("state", "finished");
                                 editor.apply();
                             }

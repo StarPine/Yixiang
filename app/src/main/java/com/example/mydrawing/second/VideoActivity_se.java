@@ -138,7 +138,8 @@ public class VideoActivity_se extends Activity implements Callback,
 
 //    private float[] srcPts = new float[] { 485, 445, 485, 35, 145, 115, 145,365 };
 //    private float[] dstPts = new float[] { 0, 0, 480, 0, 480, 640, 0, 640 };
-    private float[] srcPts = new float[]{730, 710,730,40,260, 170, 260, 580  };
+    private float[] srcPts = new float[]{0, 720,0, 0, 1280, 0, 1280, 720 };//后置
+//    private float[] srcPts = new float[]{730, 710,730,40,260, 170, 260, 580  };
     private float[] dstPts = new float[]{0, 0, 720, 0, 720, 1280, 0, 1280};
 
     public Handler mHandler = new Handler() {
@@ -613,6 +614,7 @@ public class VideoActivity_se extends Activity implements Callback,
                                     @Override
                                     public void onClick(DialogInterface arg0,
                                                         int arg1) {
+                                        FileUtils.deleteDirectoryContent(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + SystemValue.tempFilePath);
 
                                         editor.putString("state", "finished");
                                         editor.apply();
@@ -894,7 +896,8 @@ public class VideoActivity_se extends Activity implements Callback,
         for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
             Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
             Camera.getCameraInfo(camIdx, cameraInfo);
-            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {//后置
+//            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {//前置
                 try {
                     camera = Camera.open(camIdx);
                 } catch (RuntimeException e) {
@@ -1010,7 +1013,7 @@ public class VideoActivity_se extends Activity implements Callback,
 
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-
+                        FileUtils.deleteDirectoryContent(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + SystemValue.tempFilePath);
                         editor.putString("state", "finished");
                         editor.apply();
                         finish();
