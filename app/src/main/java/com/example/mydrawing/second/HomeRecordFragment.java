@@ -269,7 +269,6 @@ public class HomeRecordFragment extends Fragment {
             return convertView;
         }
     }
-
     private void deleteVideo(int position) {
         curDrawingInfo = drawingInfos.get(position);
         int id = Integer.parseInt(curDrawingInfo.getDrawingId());
@@ -277,9 +276,9 @@ public class HomeRecordFragment extends Fragment {
         drawingInfos.remove(position);
         videoAdapter.notifyDataSetChanged();
 
-        FileUtils.deleteFile(curDrawingInfo.getDrawingImg());
-        FileUtils.deleteFile(curDrawingInfo.getDrawingVideo());
-        FileUtils.deleteFile(curDrawingInfo.getVideoCover());
+//        FileUtils.deleteFile(curDrawingInfo.getDrawingImg());
+//        FileUtils.deleteFile(curDrawingInfo.getDrawingVideo());
+//        FileUtils.deleteFile(curDrawingInfo.getVideoCover());
 
     }
 }

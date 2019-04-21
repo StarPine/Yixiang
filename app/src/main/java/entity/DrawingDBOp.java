@@ -34,8 +34,8 @@ public class DrawingDBOp {
 		//生成ContentValues对象 //key:列名，value:想插入的值   
 		ContentValues cv = new ContentValues();  
 		//往ContentValues对象存放数据，键-值对模式  
-		cv.put("local_video_path", drawingInfo.getDrawingVideo());  
-		cv.put("local_video_img", drawingInfo.getVideoCover());  
+		cv.put("miboo_video_path", drawingInfo.getDrawingVideo());
+		cv.put("miboo_video_img", drawingInfo.getVideoCover());
 		cv.put("local_image_path", drawingInfo.getDrawingImg());  
 		cv.put("create_date", sdf.format(drawingInfo.getCreateDate()));
 		cv.put("content", drawingInfo.getDescription());  
@@ -110,13 +110,13 @@ public class DrawingDBOp {
 		//参数5：分组方式   
 		//参数6：having条件   
 		//参数7：排序方式   
-		Cursor cursor = db.query("local_drawing", new String[]{"id","local_video_path",
-				"local_video_img","local_image_path","create_date","content"}, null, null, null, null, "create_date desc");  
+		Cursor cursor = db.query("local_drawing", new String[]{"id","miboo_video_path",
+				"miboo_video_img","local_image_path","create_date","content"}, null, null, null, null, "create_date desc");
 		while(cursor.moveToNext()){ 
 			DrawingInfo drawingInfo = new DrawingInfo();
 			drawingInfo.setDrawingId(cursor.getInt(cursor.getColumnIndex("id"))+"");
-			drawingInfo.setDrawingVideo(cursor.getString(cursor.getColumnIndex("local_video_path")));
-			drawingInfo.setVideoCover(cursor.getString(cursor.getColumnIndex("local_video_img")));
+			drawingInfo.setDrawingVideo(cursor.getString(cursor.getColumnIndex("miboo_video_path")));
+			drawingInfo.setVideoCover(cursor.getString(cursor.getColumnIndex("miboo_video_img")));
 			drawingInfo.setDrawingImg(cursor.getString(cursor.getColumnIndex("local_image_path")));
 			try {
 				drawingInfo.setCreateDate(new Timestamp(sdf.parse(cursor.getString(cursor.getColumnIndex("create_date"))).getTime()));

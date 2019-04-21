@@ -22,7 +22,7 @@ public class DrawingDBHelper extends SQLiteOpenHelper{
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 
-		String sql = "CREATE TABLE IF NOT EXISTS local_drawing(id INTEGER PRIMARY KEY AUTOINCREMENT,local_video_path varchar(100),local_video_img varchar(100),local_image_path varchar(100), create_date varchar(45), content varchar(100))";  
+		String sql = "CREATE TABLE IF NOT EXISTS local_drawing(id INTEGER PRIMARY KEY AUTOINCREMENT,miboo_video_path varchar(100),miboo_video_img varchar(100),local_image_path varchar(100), create_date varchar(45), content varchar(100))";
 		//输出创建数据库的日志信息  
 		Log.i(TAG, "create Database------------->");  
 		//execSQL函数用于执行SQL语句  

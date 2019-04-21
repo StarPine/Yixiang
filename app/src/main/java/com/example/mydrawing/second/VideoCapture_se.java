@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
@@ -24,8 +25,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import rx.Subscriber;
+import util.BlurUtil;
 import util.FileUtils;
 import util.FileUtils.NoSdcardException;
+import util.SystemValue;
 
 import static com.googlecode.javacv.cpp.opencv_highgui.cvLoadImage;
 
@@ -44,6 +48,7 @@ public class VideoCapture_se {
     public static final int DATA_MISS = 106;
     public static final int TEMP_DATA = 107;
     static final String IMAGE_TYPE = ".jpg";
+    static Bitmap outBitmap ;
 
 
     public static String genMp4(String path, final List<Integer> saved_frame_indexs,
@@ -96,11 +101,17 @@ public class VideoCapture_se {
 
 
                         while (index < maxIndex) {
-                            String firstFile = tempFilePath + "videoTemp_" + saved_frame_indexs.get(index) + IMAGE_TYPE;
-                            Bitmap firstBitmap = getImageByPath(firstFile);
-                            float lum = (float) 1.5;
-                            Bitmap imageoperationBitmap = imageoperation(firstBitmap, lum, lum, lum);
-                            savebitmap(imageoperationBitmap, firstFile);
+
+                            if (SystemValue.VE_AND_QU.equals("quality")) {//判断是否锐化和提高亮度
+                                String firstFile = tempFilePath + "videoTemp_" + saved_frame_indexs.get(index) + IMAGE_TYPE;
+                                Bitmap firstBitmap = getImageByPath(firstFile);
+                                float lum = (float) 1.1;
+                                Bitmap sharpenBitmap = sharpenImageInOpencv(firstBitmap);//锐化
+                                Bitmap imageoperationBitmap = imageoperation(sharpenBitmap, lum, lum, lum);//亮度和对比度
+                                savebitmap(imageoperationBitmap, firstFile);
+
+                            }
+
 
                             opencv_core.IplImage image = cvLoadImage(tempFilePath
                                     + "videoTemp_" + saved_frame_indexs.get(index)
@@ -126,6 +137,72 @@ public class VideoCapture_se {
         return savePath;
     }
 
+    /**
+     * 图片锐化（拉普拉斯变换）
+     *
+     * @param bmp
+     * @return
+     */
+    private static Bitmap sharpenImage(Bitmap bmp) {
+
+        long start = System.currentTimeMillis();
+        // 拉普拉斯矩阵
+        int[] laplacian = new int[]{-1, -1, -1, -1, 9, -1, -1, -1, -1};
+
+        int width = bmp.getWidth();
+        int height = bmp.getHeight();
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+
+        int newR = 0;
+        int newG = 0;
+        int newB = 0;
+
+        float alpha = 0.3F;
+        int[] pixels = new int[width * height];
+        bmp.getPixels(pixels, 0, width, 0, 0, width, height);
+        for (int i = 1, length = height - 1; i < length; i++) {
+            for (int k = 1, len = width - 1; k < len; k++) {
+                int idx = 0;
+                for (int m = -1; m <= 1; m++) {
+                    for (int n = -1; n <= 1; n++) {
+                        int pixColor = pixels[(i + n) * width + k + m];
+                        int pixR = Color.red(pixColor);
+                        int pixG = Color.green(pixColor);
+                        int pixB = Color.blue(pixColor);
+
+                        newR = newR + (int) (pixR * laplacian[idx] * alpha);
+                        newG = newG + (int) (pixG * laplacian[idx] * alpha);
+                        newB = newB + (int) (pixB * laplacian[idx] * alpha);
+                        idx++;
+                    }
+                }
+
+                newR = Math.min(255, Math.max(0, newR));
+                newG = Math.min(255, Math.max(0, newG));
+                newB = Math.min(255, Math.max(0, newB));
+
+                pixels[i * width + k] = Color.argb(255, newR, newG, newB);
+                newR = 0;
+                newG = 0;
+                newB = 0;
+            }
+        }
+
+        bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+        long end = System.currentTimeMillis();
+        Log.d("may", "used time=" + (end - start));
+        return bitmap;
+    }
+
+
+    private static Bitmap sharpenImageInOpencv(Bitmap bitmap){
+
+        // 锐化图片
+        return BlurUtil.shareBitmap(bitmap);
+    }
+
+
+    //保存bitmap
     private static void savebitmap(Bitmap bitmap, String path) {
         //创建文件，因为不存在2级目录，所以不用判断exist，要保存png，这里后缀就是png，要保存jpg，后缀就用jpg
         File file = new File(path);
@@ -172,6 +249,11 @@ public class VideoCapture_se {
         ColorMatrix saturationmatrix = new ColorMatrix();
         saturationmatrix.setSaturation(saturation);//设置饱和度
 
+        ColorMatrix cMatrix = new ColorMatrix();
+        cMatrix.set(new float[]{lum, 0, 0, 0, 0, 0,
+                lum, 0, 0, 0,// 改变对比度
+                0, 0, lum, 0, 0, 0, 0, 0, 1, 0});
+
         ColorMatrix lummatrix = new ColorMatrix();
         //参数：rscale gscale bscale 透明度
         lummatrix.setScale(lum, lum, lum, 1);//设置亮度
@@ -180,6 +262,7 @@ public class VideoCapture_se {
 //        imagematrix.postConcat(huematrix);
 //        imagematrix.postConcat(saturationmatrix);
         imagematrix.postConcat(lummatrix);
+        imagematrix.postConcat(cMatrix);
         //通过画笔的setColorFilter进行设置
         mpaint.setColorFilter(new ColorMatrixColorFilter(imagematrix));
         canvas.drawBitmap(mbitmap, 0, 0, mpaint);

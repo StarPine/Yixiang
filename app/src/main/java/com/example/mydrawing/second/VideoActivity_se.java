@@ -26,6 +26,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -50,6 +51,10 @@ import android.widget.TextView;
 import com.example.mydrawing.R;
 import com.liimou.artdrawing.ArtDrawingLib;
 import com.liimou.artdrawing.DetectEdges;
+
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -123,10 +128,10 @@ public class VideoActivity_se extends Activity implements Callback,
 
     private int[] pixels = null;
     private byte[] frameData = null;
-    private int previewSizeWidth = 1280;
-    private int previewSizeHeight = 720;
-//    private int previewSizeWidth = 640;
-//    private int previewSizeHeight = 480;
+    //    private int previewSizeWidth = 1280;
+//    private int previewSizeHeight = 720;
+    private int previewSizeWidth = 640;
+    private int previewSizeHeight = 480;
     private boolean bProcessing = false;
     private Bitmap bitmap = null;
 
@@ -136,11 +141,11 @@ public class VideoActivity_se extends Activity implements Callback,
     private boolean isReciprocal = false;
     int screenWidth, screenHeight;
 
-//    private float[] srcPts = new float[] { 485, 445, 485, 35, 145, 115, 145,365 };
-//    private float[] dstPts = new float[] { 0, 0, 480, 0, 480, 640, 0, 640 };
-    private float[] srcPts = new float[]{0, 720,0, 0, 1280, 0, 1280, 720 };//后置
+    private float[] srcPts = new float[]{485, 445, 485, 30, 125, 105, 125, 350};
+    private float[] dstPts = new float[]{0, 0, 480, 0, 480, 640, 0, 640};
+//    private float[] srcPts = new float[]{0, 720,0, 0, 1280, 0, 1280, 720 };//后置
 //    private float[] srcPts = new float[]{730, 710,730,40,260, 170, 260, 580  };
-    private float[] dstPts = new float[]{0, 0, 720, 0, 720, 1280, 0, 1280};
+//    private float[] dstPts = new float[]{0, 0, 720, 0, 720, 1280, 0, 1280};
 
     public Handler mHandler = new Handler() {
 
@@ -382,7 +387,7 @@ public class VideoActivity_se extends Activity implements Callback,
 
         LayoutParams params = (LayoutParams) sView.getLayoutParams();
         params.width = screenWidth;
-        params.height = screenWidth / 5 * 7;
+        params.height = screenWidth / 3 * 4;
         surface_rl.setLayoutParams(params);
         seekbar_rl.setLayoutParams(params);
         last_pic_iv.setLayoutParams(params);
@@ -428,6 +433,30 @@ public class VideoActivity_se extends Activity implements Callback,
         photoUri = Uri.fromFile(new File(pic_take_path));
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!OpenCVLoader.initDebug()) {
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_11, this, mOpenCVCallBack);
+        } else {
+            mOpenCVCallBack.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        }
+    }
+
+
+    private BaseLoaderCallback mOpenCVCallBack = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                    Log.i("Starpine", "OpenCV Manager已安装，可以学习OpenCV啦。");
+                    break;
+                default:
+                    super.onManagerConnected(status);
+                    break;
+            }
+        }
+    };
 
     void preVideoDeal() {
         editor.putString("videoUrl", "");
@@ -840,7 +869,7 @@ public class VideoActivity_se extends Activity implements Callback,
         if (isRunning) {
             final Camera.Parameters p = camera.getParameters();
             List<Size> pictureSizes = p.getSupportedPictureSizes();
-            List<Camera.Size> previewSizes  = p.getSupportedPreviewSizes();
+            List<Camera.Size> previewSizes = p.getSupportedPreviewSizes();
             p.setPreviewSize(previewSizeWidth, previewSizeHeight);
             p.setPictureFormat(PixelFormat.JPEG); // Sets the image format for
             // picture 设定相片格式为JPEG，默认为NV21
@@ -896,8 +925,8 @@ public class VideoActivity_se extends Activity implements Callback,
         for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
             Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
             Camera.getCameraInfo(camIdx, cameraInfo);
-            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {//后置
-//            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {//前置
+//            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {//后置
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {//前置
                 try {
                     camera = Camera.open(camIdx);
                 } catch (RuntimeException e) {
@@ -1047,12 +1076,12 @@ public class VideoActivity_se extends Activity implements Callback,
     }
 
     private final class TouchListener implements View.OnTouchListener {
-        private PointF startPoint= new PointF();//PointF(浮点对)
-        private Matrix matrix=new Matrix();//矩阵对象
-        private Matrix currentMatrix=new Matrix();//存放照片当前的矩阵
-        private int mode=0;//确定是放大还是缩小
-        private static final int DRAG=1;//拖拉模式
-        private static final int ZOOM=2;//缩放模式
+        private PointF startPoint = new PointF();//PointF(浮点对)
+        private Matrix matrix = new Matrix();//矩阵对象
+        private Matrix currentMatrix = new Matrix();//存放照片当前的矩阵
+        private int mode = 0;//确定是放大还是缩小
+        private static final int DRAG = 1;//拖拉模式
+        private static final int ZOOM = 2;//缩放模式
         private float startDis;//开始距离
         private PointF midPoint;//中心点
 
@@ -1062,29 +1091,29 @@ public class VideoActivity_se extends Activity implements Callback,
             //判断事件的类型
             //得到低八位才能获取动作，所以要屏蔽高八位(通过与运算&255)
             //ACTION_MASK就是一个常量，代表255
-            switch (event.getAction()&MotionEvent.ACTION_MASK) {
+            switch (event.getAction() & MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN://手指下压
-                    mode=DRAG;
+                    mode = DRAG;
                     currentMatrix.set(refImageView.getImageMatrix());//记录ImageView当前的移动位置
                     startPoint.set(event.getX(), event.getY());
                     break;
                 case MotionEvent.ACTION_MOVE://手指在屏幕移动，改事件会不断被调用
-                    if(mode==DRAG){//拖拉模式
-                        float dx=event.getX()-startPoint.x;//得到在x轴的移动距离
-                        float dy=event.getY()-startPoint.y;//得到在y轴的移动距离
+                    if (mode == DRAG) {//拖拉模式
+                        float dx = event.getX() - startPoint.x;//得到在x轴的移动距离
+                        float dy = event.getY() - startPoint.y;//得到在y轴的移动距离
                         matrix.set(currentMatrix);//在没有进行移动之前的位置基础上进行移动
                         //实现位置的移动
                         matrix.postTranslate(dx, dy);
-                    }else if(mode==ZOOM){//缩放模式
-                        float endDis=distance(event);//结束距离
-                        if(endDis>10f){//防止不规则手指触碰
+                    } else if (mode == ZOOM) {//缩放模式
+                        float endDis = distance(event);//结束距离
+                        if (endDis > 10f) {//防止不规则手指触碰
                             //结束距离除以开始距离得到缩放倍数
-                            float scale=endDis/startDis;
+                            float scale = endDis / startDis;
                             //通过矩阵实现缩放
                             //参数：1.2.指定在xy轴的放大倍数;3,4以哪个参考点进行缩放
                             //开始的参考点以两个触摸点的中心为准
                             matrix.set(currentMatrix);//在没有进行缩放之前的基础上进行缩放
-                            matrix.postScale(scale,scale,midPoint.x,midPoint.y);
+                            matrix.postScale(scale, scale, midPoint.x, midPoint.y);
                         }
 
                     }
@@ -1092,13 +1121,13 @@ public class VideoActivity_se extends Activity implements Callback,
                     break;
                 case MotionEvent.ACTION_UP://手指离开屏幕
                 case MotionEvent.ACTION_POINTER_UP://当屏幕上已经有手指离开屏幕，屏幕上还有一个手指，就会触发这个事件
-                    mode=0;
+                    mode = 0;
                     break;
                 case MotionEvent.ACTION_POINTER_DOWN://当屏幕上已经有触点(手指)，再有一个手指按下屏幕，就会触发这个事件
-                    mode=ZOOM;
-                    startDis=distance(event);
-                    if(startDis>10f){//防止不规则手指触碰
-                        midPoint=mid(event);
+                    mode = ZOOM;
+                    startDis = distance(event);
+                    if (startDis > 10f) {//防止不规则手指触碰
+                        midPoint = mid(event);
                         currentMatrix.set(refImageView.getImageMatrix());//记录ImageView当前的缩放倍数
                     }
                     break;
@@ -1112,18 +1141,19 @@ public class VideoActivity_se extends Activity implements Callback,
         }
 
     }
+
     //计算两点之间的距离(勾股定理)
     public float distance(MotionEvent event) {
-        float dx=event.getX(1)-event.getX(0);
-        float dy=event.getY(1)-event.getY(0);
-        return (float) Math.sqrt(dx*dx+dy*dy);
+        float dx = event.getX(1) - event.getX(0);
+        float dy = event.getY(1) - event.getY(0);
+        return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
     //计算两个点的中心点
-    public static PointF mid(MotionEvent event){
-        float midx=(event.getX(1)+event.getX(0))/2;
-        float midy=(event.getY(1)+event.getY(0))/2;
-        return new PointF(midx,midy);
+    public static PointF mid(MotionEvent event) {
+        float midx = (event.getX(1) + event.getX(0)) / 2;
+        float midy = (event.getY(1) + event.getY(0)) / 2;
+        return new PointF(midx, midy);
     }
 
 }

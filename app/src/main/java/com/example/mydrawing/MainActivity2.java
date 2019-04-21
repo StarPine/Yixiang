@@ -13,7 +13,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -22,6 +25,9 @@ import android.widget.Toast;
 import com.example.mydrawing.R;
 import com.example.mydrawing.second.HomeCreationFragment;
 import com.example.mydrawing.second.HomeRecordFragment;
+import com.example.mydrawing.second.MyDialog;
+
+import static com.tencent.mm.sdk.platformtools.MMApplicationContext.getContext;
 
 /**
  * Created by Jerry on 2019/4/6.
@@ -146,6 +152,8 @@ public class MainActivity2 extends FragmentActivity {
         home_drawing_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 hidtFragment(ft);
@@ -162,6 +170,21 @@ public class MainActivity2 extends FragmentActivity {
                 }
             }
         });
+    }
+
+    private void setPromptWin() {
+        MyDialog dialog = new MyDialog(MainActivity2.this);
+        View viewDialog = LayoutInflater.from(MainActivity2.this).inflate(R.layout.time_selection_layout, null);
+
+        dialog.setContentView(viewDialog);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        WindowManager windowManager = getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
+        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        dialog.getWindow().setAttributes(lp);
     }
 
     //隐藏所有的fragment

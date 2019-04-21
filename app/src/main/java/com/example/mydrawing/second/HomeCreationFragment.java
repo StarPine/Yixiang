@@ -3,6 +3,7 @@ package com.example.mydrawing.second;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,10 +24,15 @@ import android.support.v4.content.FileProvider;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -65,12 +71,12 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
     private ImageButton no_ref_ibtn;
     private ImageButton ten_s_ibtn;
     private ImageButton thirty_s_ibtn;
-    private ImageButton sixty_s_ibtn, time_select_cancel;
+    private ImageButton sixty_s_ibtn, time_select_cancel,velocity_but,quality_but;
+    private ImageView message_iv;
     Intent intent;
     Bundle bundle;
     View timeSelectView;
-    AlertDialog.Builder builder;
-    AlertDialog dialog;
+    Dialog dialog;
     String videosec = "10s";
     Activity activity;
     Uri photoUri;
@@ -81,6 +87,7 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
     private static final String DECODED_CONTENT_KEY = "codedContent";
     private static final String DECODED_BITMAP_KEY = "codedBitmap";
     private static final int REQUEST_CODE_SCAN = 0x0000;
+    private MyDialog myDialogialog;
 
 
     @Override
@@ -373,16 +380,61 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
     }
 
     void showTimeSelection() {
-        if (builder == null) {
-            builder = new AlertDialog.Builder(getContext());
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("mode", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        if (dialog == null) {
+            dialog = new Dialog(getContext(), R.style.PicDialogTheme);
         }
+
         if (timeSelectView == null) {
             timeSelectView = LayoutInflater.from(getActivity()).inflate(R.layout.time_selection_layout, null);
             ten_s_ibtn = (ImageButton) timeSelectView.findViewById(R.id.ten_s_ibtn);
             thirty_s_ibtn = (ImageButton) timeSelectView.findViewById(R.id.thirty_s_ibtn);
             sixty_s_ibtn = (ImageButton) timeSelectView.findViewById(R.id.sixty_s_ibtn);
             time_select_cancel = (ImageButton) timeSelectView.findViewById(R.id.cancel_ibtn);
+            velocity_but = (ImageButton) timeSelectView.findViewById(R.id.velocity_but);
+            quality_but = (ImageButton) timeSelectView.findViewById(R.id.quality_but);
+            message_iv = (ImageView) timeSelectView.findViewById(R.id.message_iv);
+            String ve_and_qu = sharedPreferences.getString("ve_and_qu", "");
+            SystemValue.VE_AND_QU = ve_and_qu;
+            if(ve_and_qu.equals("velocity")){
+                velocity_but.setImageResource(R.drawable.velocity_selected);
+                quality_but.setImageResource(R.drawable.quality_unselect);
+                message_iv.setImageResource(R.drawable.velocity);
+            }else if(ve_and_qu.equals("quality")){
+                velocity_but.setImageResource(R.drawable.velocity_unselect);
+                quality_but.setImageResource(R.drawable.quality_selected);
+                message_iv.setImageResource(R.drawable.quality);
+            }else {
+                velocity_but.setImageResource(R.drawable.velocity_selected);
+                quality_but.setImageResource(R.drawable.quality_unselect);
+                message_iv.setImageResource(R.drawable.velocity);
+            }
 
+            velocity_but.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    velocity_but.setImageResource(R.drawable.velocity_selected);
+                    quality_but.setImageResource(R.drawable.quality_unselect);
+                    message_iv.setImageResource(R.drawable.velocity);
+                    SystemValue.VE_AND_QU = "velocity";
+                    editor.putString("ve_and_qu", "velocity");
+                    editor.commit();
+                }
+            });
+
+            quality_but.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    velocity_but.setImageResource(R.drawable.velocity_unselect);
+                    quality_but.setImageResource(R.drawable.quality_selected);
+                    message_iv.setImageResource(R.drawable.quality);
+                    SystemValue.VE_AND_QU = "quality";
+                    editor.putString("ve_and_qu", "quality");
+                    editor.commit();
+                }
+            });
 
             ten_s_ibtn.setOnClickListener(new View.OnClickListener() {
 
@@ -435,15 +487,26 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
                 }
             });
 
-            builder.setView(timeSelectView);
-            dialog = builder.create();
+            showDialog(timeSelectView);
         }else {
             ten_s_ibtn.setImageResource(R.drawable.ten_s_unselect);
             thirty_s_ibtn.setImageResource(R.drawable.fifteen_s_unselect);
             sixty_s_ibtn.setImageResource(R.drawable.thirty_s_unselect);
         }
         dialog.show();
+    }
 
+    private void showDialog(View view) {
+        // 引入窗口配置文件
+
+        dialog.setCanceledOnTouchOutside(true);
+        Window window = dialog.getWindow();
+        window.setContentView(view);
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT);
+        window.setGravity(Gravity.CENTER);
+        window.getAttributes().alpha = 1.0f;
+//        dialog.show();
     }
 
     @Override

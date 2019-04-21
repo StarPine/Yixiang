@@ -582,10 +582,10 @@ public class HomeLocalFragment extends Fragment{
 			return;
 		}
 		DrawingInfo drawingInfo = drawingInfos.get(position);
-		String local_video_path = drawingInfo.getDrawingVideo();
+		String miboo_video_path = drawingInfo.getDrawingVideo();
 		String destFilePath = SystemValue.dest_head+System.currentTimeMillis()+".mp4";
 		Toast.makeText(getActivity(), "uploadVideoToQcloud", Toast.LENGTH_SHORT).show();
-		videoUpload.uploadToQcloud(local_video_path, destFilePath,mHandler);
+		videoUpload.uploadToQcloud(miboo_video_path, destFilePath,mHandler);
 	}
 
 	// 上传作品

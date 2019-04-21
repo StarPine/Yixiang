@@ -20,6 +20,7 @@ public class SystemValue {
 //	public static String basic_url = "http://www.cool-la-share.cn:80/MyDrawingServer/";
 //	public static String basic_url = "http://123.207.29.211:8080/MyDrawingServer/";
 	public static String VIDEO_SIGN = null;
+	public static String VE_AND_QU = "";
 	public static String dest_head = "/sdk/";
 	public static int cur_fragment_index = 0;
 	public static int per_fragment_index = 0;
@@ -36,7 +37,8 @@ public class SystemValue {
 	public static DrawingInfo curLocalDrawingInfo;
 	
 	public static String tempFilePath = "MyDrawings/video_temp";
-	public static String localVideoPath = "MyDrawings/local_video";
+//	public static String localVideoPath = "MyDrawings/local_video";
+	public static String localVideoPath = "MyDrawings/miboo_video";
 	public static String localImagePath = "MyDrawings/local_image";
 	public static String localAppPath = "MyDrawings/local_app"; 
 	
