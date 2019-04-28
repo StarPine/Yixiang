@@ -287,7 +287,7 @@ public class VideoActivity_se extends Activity implements Callback,
     SurfaceHolder surfaceHolder;
     Camera camera;
     ImageView cameraPreView = null;
-    ImageView refImageView;
+    CustomImageView refImageView;
     long endofmp4 = 0;
 
     int total_frame_size = 0, frame_index_removed = 1;
@@ -573,7 +573,7 @@ public class VideoActivity_se extends Activity implements Callback,
 
 
         cameraPreView = (ImageView) findViewById(R.id.camera_preview);
-        refImageView = (ImageView) findViewById(R.id.ref_img_iv);
+        refImageView = (CustomImageView) findViewById(R.id.ref_img_iv);
 
         finish_ibtn = (ImageButton) findViewById(R.id.finish_ibtn);
         pause = (ImageButton) findViewById(R.id.pause_ibtn);
@@ -590,7 +590,7 @@ public class VideoActivity_se extends Activity implements Callback,
         back_ibtn.setVisibility(View.VISIBLE);
         pause.setImageResource(R.drawable.pause_icon);
 
-        refImageView.setOnTouchListener(new TouchListener());
+//        refImageView.setOnTouchListener(new TouchListener());
         setOnclickListener();
 
     }

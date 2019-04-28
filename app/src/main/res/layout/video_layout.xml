@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background" >
+    android:background="@drawable/background"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <RelativeLayout
         android:id="@+id/surface_rl"
@@ -60,13 +62,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <ImageView
+        <!--<ImageView-->
+            <!--android:id="@+id/ref_img_iv"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:background="@null"-->
+            <!--android:scaleType="matrix" />-->
+        <com.example.mydrawing.second.CustomImageView
             android:id="@+id/ref_img_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:background="@null"
-            android:scaleType="matrix" />
+            app:can_back_translate="false"
+            app:can_back_rotate="false"
+            app:can_back_scale="true"
+            app:min_scale_factor="0.1"
+            app:max_scale_factor="10" />
+
         <util.VerticalSeekBar
             android:id="@+id/vseekbar_left"
             style="@style/Widget.SeekBar.Transparency"

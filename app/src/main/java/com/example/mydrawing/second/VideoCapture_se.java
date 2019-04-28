@@ -25,7 +25,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import rx.Subscriber;
 import util.BlurUtil;
 import util.FileUtils;
 import util.FileUtils.NoSdcardException;
