@@ -16,6 +16,7 @@ import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.PreviewCallback;
@@ -56,13 +57,16 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.ref.SoftReference;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -124,25 +128,27 @@ public class VideoActivity_se extends Activity implements Callback,
 
     long total_record_sec = 0;
     String timeString;
-    int cur_progress = 0;
+    public static int cur_progress = 0;
 
     private int[] pixels = null;
     private byte[] frameData = null;
-    //    private int previewSizeWidth = 1280;
-//    private int previewSizeHeight = 720;
-    private int previewSizeWidth = 640;
-    private int previewSizeHeight = 480;
     private boolean bProcessing = false;
     private Bitmap bitmap = null;
+    private Bitmap bitmap2 = null;
 
     private int[] reciprocal_drawables = new int[]{R.drawable.three_icon,
             R.drawable.two_icon, R.drawable.one_icon};
     private int reciprocal_index = 0;
     private boolean isReciprocal = false;
     int screenWidth, screenHeight;
-
-    private float[] srcPts = new float[]{485, 445, 485, 30, 125, 105, 125, 350};
-    private float[] dstPts = new float[]{0, 0, 480, 0, 480, 640, 0, 640};
+    //        private int previewSizeWidth = 1280;
+//    private int previewSizeHeight = 720;
+    private int previewSizeWidth = 640;
+    private int previewSizeHeight = 480;
+    private float[] srcPts;
+    private float[] dstPts;
+//    private float[] srcPts = new float[]{485, 445, 485, 30, 155, 130, 155, 350};
+//    private float[] dstPts = new float[]{0, 0, 480, 0, 480, 640, 0, 640};
 //    private float[] srcPts = new float[]{0, 720,0, 0, 1280, 0, 1280, 720 };//后置
 //    private float[] srcPts = new float[]{730, 710,730,40,260, 170, 260, 580  };
 //    private float[] dstPts = new float[]{0, 0, 720, 0, 720, 1280, 0, 1280};
@@ -198,8 +204,6 @@ public class VideoActivity_se extends Activity implements Callback,
                         editor.putString("state", "finished");
                         editor.apply();
                         FileUtils.deleteDirectoryContent(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + tempFilePath);
-
-
                         endofmp4 = System.currentTimeMillis();
                         if (timer != null) {
                             timer.cancel();
@@ -209,7 +213,8 @@ public class VideoActivity_se extends Activity implements Callback,
                             timerTask.cancel();
                             timerTask = null;
                         }
-                        video_gen_pb.setProgress(100);
+                        video_gen_pb.setProgress(saved_frame_indexs.size());
+
 
                         mHandler.sendEmptyMessage(JUDGE_FINISH);
                     } else {
@@ -268,13 +273,8 @@ public class VideoActivity_se extends Activity implements Callback,
                         }
 
                     } else {
-                        if (cur_progress < 90) {
-                            cur_progress += 2;
-                        } else if (cur_progress < 98) {
-                            cur_progress += 1;
-                        }
 
-                        video_gen_pb.setProgress(cur_progress);
+                        loadProgtess();
                     }
 
                     break;
@@ -282,6 +282,11 @@ public class VideoActivity_se extends Activity implements Callback,
         }
 
     };
+
+    private void loadProgtess() {
+        Log.d("STAR", "cur_progress: " + cur_progress);
+        video_gen_pb.setProgress(cur_progress);
+    }
 
     SurfaceView sView;
     SurfaceHolder surfaceHolder;
@@ -295,6 +300,8 @@ public class VideoActivity_se extends Activity implements Callback,
     List<Integer> saved_frame_indexs = new ArrayList<Integer>();
     int my_frame_rate = 1;// 抽帧间隔
     int cur_rate = 1;
+
+    static int ig_rate = 3;
 
     Timer timer;
     TimerTask timerTask;
@@ -315,13 +322,6 @@ public class VideoActivity_se extends Activity implements Callback,
     private int mode = NONE;
 
     private Matrix matrix = new Matrix();
-    private Matrix savedMatrix = new Matrix();
-    // 第一个按下的手指的点
-    private PointF startPoint = new PointF();
-    // 两个按下的手指的触摸点的中点
-    private PointF midPoint = new PointF();
-    // 初始的两个手指按下的触摸点的距离
-    private float oriDis = 1f;
     private String saveMp4Path;
 
     @Override
@@ -336,27 +336,22 @@ public class VideoActivity_se extends Activity implements Callback,
         display.getMetrics(dm);
         screenWidth = dm.widthPixels; // 屏幕宽（像素，如：480px）
         screenHeight = dm.heightPixels; // 屏幕高（像素，如：800p）
-
-
-        int scale = (int) (screenWidth * 1.0f / previewSizeWidth);
-        scale = -1;
-        if (scale > 0) {
-            previewSizeHeight = (int) (previewSizeHeight * scale);
-            previewSizeWidth = (int) (previewSizeWidth * scale);
-
-            int len = srcPts.length;
-            for (int i = 0; i < len; i++) {
-                srcPts[i] = srcPts[i] * scale;
-                dstPts[i] = dstPts[i] * scale;
-            }
-        }
-
-
         String videosec = getIntent().getExtras().getString("record_sec");
         if (videosec.equals("30s")) {
             max_frame_num = 600;
         } else if (videosec.equals("15s")) {
             max_frame_num = 300;
+        }
+        if (SystemValue.VE_AND_QU.equals("velocity")) {
+            previewSizeWidth = 640;
+            previewSizeHeight = 480;
+            srcPts = new float[]{485, 445, 485, 30, 167, 128, 165, 355};
+            dstPts = new float[]{0, 0, 480, 0, 480, 640, 0, 640};
+        } else if (SystemValue.VE_AND_QU.equals("quality")) {
+            previewSizeWidth = 1280;
+            previewSizeHeight = 720;
+            srcPts = new float[]{730, 710, 730, 40, 257, 177, 250, 585};
+            dstPts = new float[]{0, 0, 720, 0, 720, 1280, 0, 1280};
         }
 
         inflater = (LayoutInflater) this
@@ -378,8 +373,11 @@ public class VideoActivity_se extends Activity implements Callback,
         pixels = new int[previewSizeWidth * previewSizeHeight];
         bitmap = Bitmap.createBitmap(previewSizeHeight, previewSizeWidth,
                 Bitmap.Config.ARGB_8888);
-        selectPhotoUtil = new SelectPhotoUtil(this);
+//        pixels = new int[640 * 480];
+//        bitmap = Bitmap.createBitmap(480, 640,
+//                Bitmap.Config.ARGB_8888);
 
+        selectPhotoUtil = new SelectPhotoUtil(this);
         sView = (SurfaceView) this.findViewById(R.id.surfaceid);
         surfaceHolder = sView.getHolder();
         surfaceHolder.addCallback(this);
@@ -431,6 +429,19 @@ public class VideoActivity_se extends Activity implements Callback,
 
         pic_take_path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + localImagePath + "/pictaketemp.jpg";
         photoUri = Uri.fromFile(new File(pic_take_path));
+    }
+
+    private void doImageProcessing() {
+
+        bProcessing = true;
+        ArtDrawingLib.AffineCorrectionImage(previewSizeWidth,
+                previewSizeHeight, frameData, pixels);
+        bitmap.setPixels(pixels, 0, previewSizeHeight, 0, 0, previewSizeHeight,
+                previewSizeWidth);
+
+        cameraPreView.setImageBitmap(bitmap);
+        bProcessing = false;
+
     }
 
     @Override
@@ -566,6 +577,7 @@ public class VideoActivity_se extends Activity implements Callback,
         video_gen_pb = (ProgressBar) videoGenLayout
                 .findViewById(R.id.video_gen_pb);
         video_gen_pb.setProgress(0);
+
 
         ensure_ok = (ImageButton) ensureVideoLayout.findViewById(R.id.ensure_video_ibtn);
         ensure_cancel = (ImageButton) ensureVideoLayout.findViewById(R.id.cancel_ensure_ibtn);
@@ -799,7 +811,13 @@ public class VideoActivity_se extends Activity implements Callback,
                 File file = new FileUtils().createFileInSDCard("videoTemp_"
                         + index + IMAGE_TYPE, tempFilePath);
                 os = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);//不创建水印图
+                if (SystemValue.VE_AND_QU.equals("quality")) {
+                    bitmap2 = verticalCompression(bitmap);
+                    bitmap2.compress(Bitmap.CompressFormat.JPEG, 100, os);//不创建水印图
+                } else {
+
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);//不创建水印图
+                }
 
                 os.flush();
                 os.close();
@@ -842,6 +860,13 @@ public class VideoActivity_se extends Activity implements Callback,
         }
     }
 
+    private Bitmap verticalCompression(Bitmap bitmap){
+        Matrix matrix = new Matrix();
+        matrix.postScale(1, (float) 0.77);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                bitmap.getHeight(), matrix, false);
+    }
+
     // 将图片转换成视频
     void imgsToMp4() {
         new Thread(new Runnable() {
@@ -853,6 +878,7 @@ public class VideoActivity_se extends Activity implements Callback,
 
                 editor.putString("state", "convertion");
                 editor.apply();
+                video_gen_pb.setMax(saved_frame_indexs.size());//设置压缩进度条最大值
                 saveMp4Path = VideoCapture_se.genMp4(tempFilePath, saved_frame_indexs, 20,
                         mHandler, localVideoPath, VideoActivity_se.this);
             }
@@ -885,23 +911,27 @@ public class VideoActivity_se extends Activity implements Callback,
                 public void onPreviewFrame(byte[] arg0, Camera arg1) {
 
                     frameData = arg0;
-                    // myHandler.post(DoImageProcessing);
                     if (isRunning) {
                         mHandler.sendEmptyMessage(DO_IMAGE);
-                        if (!bProcessing && !isPause) {
-                            if (saved_frame_indexs.size() > 1
-                                    && saved_frame_indexs.get(1) > 1)
-                                my_frame_rate = saved_frame_indexs.get(1) / 2;
 
-                            if (cur_rate == my_frame_rate) {
-                                mHandler.sendEmptyMessage(SAVE_IMAGE);
-                                // myHandler.post(SaveImageProcessing);
-                                cur_rate = 1;
-                            } else {
-                                cur_rate++;
-                                index++;
+//                        ig_rate++;
+//                        ig_rate %= 3;
+//                        if (ig_rate == 0) {
+                            if (!bProcessing && !isPause) {
+                                if (saved_frame_indexs.size() > 1
+                                        && saved_frame_indexs.get(1) > 1)
+                                    my_frame_rate = saved_frame_indexs.get(1) / 2;
+
+                                if (cur_rate == my_frame_rate) {
+                                    mHandler.sendEmptyMessage(SAVE_IMAGE);
+//                                 myHandler.post(SaveImageProcessing);
+                                    cur_rate = 1;
+                                } else {
+                                    cur_rate++;
+                                    index++;
+                                }
                             }
-                        }
+//                        }
                     }
                 }
             });
@@ -951,17 +981,6 @@ public class VideoActivity_se extends Activity implements Callback,
         }
     }
 
-    private void doImageProcessing() {
-
-        bProcessing = true;
-        ArtDrawingLib.AffineCorrectionImage(previewSizeWidth,
-                previewSizeHeight, frameData, pixels);
-        bitmap.setPixels(pixels, 0, previewSizeHeight, 0, 0, previewSizeHeight,
-                previewSizeWidth);
-        cameraPreView.setImageBitmap(bitmap);
-        bProcessing = false;
-
-    }
 
     private void saveImageProcessing() {
         toSaveBitmapWithAffine(frameData);
@@ -979,6 +998,7 @@ public class VideoActivity_se extends Activity implements Callback,
             Intent intentRe = new Intent();
             setResult(606, intentRe);
             finish();
+            cur_progress = 0;
         } else if (!isVideo) {
             flexibleLayout.removeAllViews();
             flexibleLayout.addView(videoGenLayout);

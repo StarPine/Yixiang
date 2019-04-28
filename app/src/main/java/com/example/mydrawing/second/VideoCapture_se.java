@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Environment;
@@ -19,6 +20,13 @@ import com.googlecode.javacv.FFmpegFrameRecorder;
 import com.googlecode.javacv.FrameRecorder.Exception;
 import com.googlecode.javacv.cpp.opencv_core;
 
+import org.opencv.android.Utils;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.utils.Converters;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -30,6 +38,7 @@ import util.FileUtils;
 import util.FileUtils.NoSdcardException;
 import util.SystemValue;
 
+import static com.googlecode.javacv.cpp.opencv_highgui.cvConvertImage;
 import static com.googlecode.javacv.cpp.opencv_highgui.cvLoadImage;
 
 /**
@@ -101,24 +110,42 @@ public class VideoCapture_se {
 
                         while (index < maxIndex) {
 
-                            if (SystemValue.VE_AND_QU.equals("quality")) {//判断是否锐化和提高亮度
+//                            if (SystemValue.VE_AND_QU.equals("quality")) {//判断是否锐化和提高亮度
+                            if (false) {//判断是否锐化和提高亮度
                                 String firstFile = tempFilePath + "videoTemp_" + saved_frame_indexs.get(index) + IMAGE_TYPE;
                                 Bitmap firstBitmap = getImageByPath(firstFile);
                                 float lum = (float) 1.1;
                                 Bitmap sharpenBitmap = sharpenImageInOpencv(firstBitmap);//锐化
                                 Bitmap imageoperationBitmap = imageoperation(sharpenBitmap, lum, lum, lum);//亮度和对比度
-                                savebitmap(imageoperationBitmap, firstFile);
+                                opencv_core.IplImage image = opencv_core.IplImage.create(imageoperationBitmap.getWidth(),
+                                        imageoperationBitmap.getHeight(),
+                                        opencv_core.IPL_DEPTH_8U, 4);
+                                imageoperationBitmap.copyPixelsToBuffer(image.getByteBuffer());
 
+                                if (image != null) {
+                                    recorder.record(image);
+                                    if(index < maxIndex-1){
+                                        VideoActivity_se.cur_progress = index;
+                                    }
+                                }
+                            } else {
+//                                if (SystemValue.VE_AND_QU.equals("quality")){
+//                                    String firstFile = tempFilePath + "videoTemp_" + saved_frame_indexs.get(index) + IMAGE_TYPE;
+//                                    Bitmap bitmap = verticalCompression(getImageByPath(firstFile));
+//                                    savebitmap(bitmap,firstFile);
+//                                }
+                                opencv_core.IplImage image = cvLoadImage(tempFilePath
+                                        + "videoTemp_" + saved_frame_indexs.get(index)
+                                        + IMAGE_TYPE);
+                                if (image != null) {
+                                    recorder.record(image);
+
+                                    if(index < maxIndex-1){
+                                        VideoActivity_se.cur_progress = index;
+                                    }
+                                }
                             }
 
-
-                            opencv_core.IplImage image = cvLoadImage(tempFilePath
-                                    + "videoTemp_" + saved_frame_indexs.get(index)
-                                    + IMAGE_TYPE);
-                            if (image != null) {
-
-                                recorder.record(image);
-                            }
                             index++;
                         }
                         Log.d("test", "录制完成....");
@@ -134,6 +161,13 @@ public class VideoCapture_se {
             }
         }.start();
         return savePath;
+    }
+
+    private static Bitmap verticalCompression(Bitmap bitmap){
+        Matrix matrix = new Matrix();
+        matrix.postScale(1, (float) 0.77);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                bitmap.getHeight(), matrix, true);
     }
 
     /**

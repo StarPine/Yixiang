@@ -193,6 +193,10 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
     }
 
     void preVideoDeal(){
+
+        SharedPreferences modeSP = activity.getSharedPreferences("mode", Context.MODE_PRIVATE);
+        modeSP.edit();
+        SystemValue.VE_AND_QU = modeSP.getString("ve_and_qu", "velocity");
         sharedPreferences= activity.getSharedPreferences("preVideo",
                 Activity.MODE_PRIVATE);
         //实例化SharedPreferences.Editor对象
@@ -396,8 +400,8 @@ public class HomeCreationFragment extends Fragment implements View.OnClickListen
             velocity_but = (ImageButton) timeSelectView.findViewById(R.id.velocity_but);
             quality_but = (ImageButton) timeSelectView.findViewById(R.id.quality_but);
             message_iv = (ImageView) timeSelectView.findViewById(R.id.message_iv);
-            String ve_and_qu = sharedPreferences.getString("ve_and_qu", "");
-            SystemValue.VE_AND_QU = ve_and_qu;
+            String ve_and_qu = sharedPreferences.getString("ve_and_qu", "velocity");
+//            SystemValue.VE_AND_QU = ve_and_qu;
             if(ve_and_qu.equals("velocity")){
                 velocity_but.setImageResource(R.drawable.velocity_selected);
                 quality_but.setImageResource(R.drawable.quality_unselect);
